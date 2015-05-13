@@ -15,16 +15,10 @@ RUN apt-get install -y vim tar git curl wget dialog net-tools build-essential su
 RUN apt-get install -y python python-dev python-distribute python-pip
 
 ADD ./ /tblog
-
+WORKDIR /tblog
 
 # Get pip to download and install requirements:
 RUN pip install -r /tblog/requirements.txt
-
-WORKDIR /tblog
-
-# Set up git hook
-CMD echo "GIT_WORK_TREE=/home/www/flask_project git checkout -f" > /tblog/.git/hooks/post-recieve
-CMD chmod +x /tblog/.git/hooks/post-receive
 
 # Supervisor for reloading
 ADD tblog.conf /etc/supervisor/conf.d/tblog.conf
