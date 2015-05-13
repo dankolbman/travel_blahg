@@ -33,4 +33,4 @@ ADD tblog.conf /etc/supervisor/conf.d/tblog.conf
 #CMD python app.py &
 
 # Supervisor starts gunicorn and reloads when the source directory changes
-CMD supervisorctl start tblog
+CMD /usr/bin/supervisord
