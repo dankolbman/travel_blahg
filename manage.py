@@ -2,6 +2,7 @@ import os
 
 from flask.ext.script import Manager, Server
 from flask.ext.script.commands import ShowUrls, Clean
+
 from blog import create_app
 from blog.models import db, User
 
@@ -14,6 +15,17 @@ manager = Manager(app)
 manager.add_command("server", Server())
 manager.add_command("show-urls", ShowUrls())
 manager.add_command("clean", Clean())
+
+
+@manager.command
+def createuser(name, password):
+  if User.query.filter_by(username=name).first() != None:
+    print('User with name', name, 'already exists!')
+    return
+  user = User(name, password)
+  db.session.add(user)
+  db.session.commit()
+  print('Added user', user.username)
 
 @manager.command
 def createdb():

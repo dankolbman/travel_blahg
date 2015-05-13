@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block title %}Login{% endblock %}
+
+{% block body %}
+  <h1>Login</h1>
+  <form role="form" action="{{ url_for('.login') }}" method="post">
+    {{ form.hidden_tag() }}
+
+    {{ form.username.label }}
+    {% if form.username.errors %}
+      {% for e in form.username.errors %}
+        <p class="help-block">{{ e }}</p>
+      {% endfor %}
+    {% endif %}
+    {{ form.username(class_="form-control") }}
+
+    {{ form.password.label }}
+    {% if form.password.errors %}
+        {% for e in form.password.errors %}
+            <p class="help-block">{{ e }}</p>
+        {% endfor %}
+    {% endif %}
+    {{ form.password(class_="form-control") }}
+
+    <button type="submit">Submit</button>
+  </form>
+{% endblock %}
+
