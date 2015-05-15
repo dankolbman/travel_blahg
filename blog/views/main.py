@@ -3,14 +3,16 @@ from flask.ext.login import login_user, logout_user, login_required
 
 from blog.extensions import cache
 from blog.forms import LoginForm
-from blog.models import User
+from blog.models import User, Post
 
 main = Blueprint('main', __name__)
 
 @main.route('/')
 def index():
   """ Home page """
-  return render_template('index.html')
+  # Show recent posts
+  p = Post.query.limit(5).all()
+  return render_template('index.html', posts=p)
 
 @main.route("/login", methods=["GET", "POST"])
 def login():
