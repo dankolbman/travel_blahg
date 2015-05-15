@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% block title %}Post {{post.title}} {% endblock %}
+
+{% block body %}
+
+  <h2>By {{ post.id }}</h2>
+
+  <p>{{ post.body }}</p>
+
+{% endblock %}

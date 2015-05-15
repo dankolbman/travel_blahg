@@ -3,5 +3,17 @@
 {% block title %}Home{% endblock %}
 
 {% block body %}
-  Hello world!!!
+  <h1>Latest posts</h1>
+
+  {% if posts %}
+    <div class="row">
+    {% for post in posts %}
+
+      {% include 'includes/post.html' %}
+
+    {% endfor %}
+    </div>
+  {% endif %}
+
+  
 {% endblock %}

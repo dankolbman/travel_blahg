@@ -1,0 +1,32 @@
+  <div class="navbar-fixed">
+  <nav>
+  <div class="nav-wrapper">
+  <div class="container">
+
+    <a class="brand-logo"  href="{{ url_for('main.index') }}">Home</a>
+
+    <a href="#" data-activates="mobile" class="button-collapse right"><i class="mdi-navigation-menu"></i></a>
+
+    <ul class="right hide-on-med-and-down">
+      {% if not current_user.is_authenticated() %}
+        <li><a href="{{ url_for('main.login') }}">Login</a></li>
+      {% else %}
+        <li><a href="{{ url_for('user.write') }}">Make a post</a></li>
+        <li><a href="{{ url_for('main.logout') }}">Logout</a></li>
+      {% endif %}
+    </ul>
+
+    <ul class="side-nav" id="mobile">
+      {% if not current_user.is_authenticated() %}
+        <li><a href="{{ url_for('main.login') }}">Login</a></li>
+      {% else %}
+        <li><a href="{{ url_for('user.write') }}">Make a post</a></li>
+        <li><a href="{{ url_for('main.logout') }}">Logout</a></li>
+      {% endif %}
+    </ul>
+
+
+  </div>
+  </div>
+  </nav>
+  </div>

@@ -5,43 +5,52 @@
     
     {% block meta %}
       <meta name="description" content="">
-      <meta name="author" content="">
+      <meta name="author" content="Dan Kolbman"></meta>
     {% endblock %}
 
     {% block css %}
+      <link href="{{ url_for('static', filename='css/materialize.css') }}" rel="stylesheet"></link>
+
+      <link href="{{ url_for('static', filename='css/main.css') }}" rel="stylesheet"></link>
     {% endblock %}
+
+    {% block scripts %}
+     <script type="text/javascript" src="{{ url_for('static', filename='js/jquery.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='mjs/materialize.min.js')}}"></script>
+
+    {% endblock %}
+
 </head>
 
-<body>
-  <div class="navbar navbar-inverse navbar-fixed-top">
-    <ul class="nav navbar-nav">
-      <li><a href="{{ url_for('.index') }}">Home</a></li>
+<body class="blue lighten-5">
 
-      {% if not current_user.is_authenticated() %}
-          <li><a href="{{ url_for('.login') }}">Login</a></li>
-      {% else %}
-          <li><a href="{{ url_for('.logout') }}">Logout</a></li>
-      {% endif %}
-
-    </ul>
-  </div>
+  {% include 'includes/navigation.html' %}
 
   <div class="container">
-      {% with messages = get_flashed_messages(with_categories=true) %}
-        {% if messages %}
-          {% for category, message in messages %}
-            <div class="alert alert-{{ category }} alert-dismissible" role="alert">
-              <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-              {{ message }}
-            </div>
-          {% endfor %}
-        {% endif %}
-      {% endwith %}
 
-      {% block body %}
-      {% endblock %}
+    {% block body %}
+    {% endblock %}
 
-    </div>
+  </div>
+
+  {% block foot_scripts %}
+
+  <script type="text/javascript" src="{{ url_for('static', filename='js/blog.js') }}"></script>
+
+  <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+  <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+
+  {% endblock %}
+
+  {% block alerts %}
+    {% for message in get_flashed_messages() %}
+      <script type="text/javascript">
+        toast('{{ message }}', 5000);
+      </script>
+    {% endfor %}
+  {% endblock %}
+
+
   </body>
 </html>
 
