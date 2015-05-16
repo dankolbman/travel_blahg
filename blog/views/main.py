@@ -1,6 +1,8 @@
 from flask import Blueprint, render_template, flash, request, redirect, url_for, current_app
 from flask.ext.login import login_user, logout_user, login_required
 
+from sqlalchemy import desc
+
 from blog.extensions import cache
 from blog.forms import LoginForm
 from blog.models import User, Post
@@ -12,7 +14,7 @@ main = Blueprint('main', __name__)
 def index():
   """ Home page """
   # Show recent posts
-  p = Post.query.limit(10).all()
+  p = Post.query.order_by(desc(Post.timestamp)).limit(10).all()
   return render_template('index.html', posts=p)
 
 @main.route("/login", methods=["GET", "POST"])

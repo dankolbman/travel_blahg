@@ -1,5 +1,7 @@
 import os, random, string
 
+from datetime import datetime
+
 from flask import Blueprint, render_template, flash, request, redirect, url_for, current_app, send_file
 from flask.ext.login import login_required, current_user
 from werkzeug import secure_filename 
@@ -29,6 +31,7 @@ def new_text():
   if form.validate_on_submit():
     textpost = TextPost(author=current_user._get_current_object(),
               title=form.title.data,
+              timestamp=datetime.utcnow(),
               text=form.text.data,
               latitude=form.latitude.data,
               longitude=form.longitude.data)
@@ -58,6 +61,7 @@ def new_image():
 
       imagepost = ImagePost(author=current_user._get_current_object(),
                     title=form.title.data,
+                    timestamp=datetime.utcnow(),
                     caption=form.caption.data,
                     image_path=filename,
                     latitude=form.latitude.data,
