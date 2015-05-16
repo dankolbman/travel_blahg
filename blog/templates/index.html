@@ -2,7 +2,29 @@
 
 {% block title %}Home{% endblock %}
 
+{% block scripts %}
+
+  {{ super() }}
+
+  <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+
+  <script src='https://api.tiles.mapbox.com/mapbox.js/v2.1.9/mapbox.js'></script>
+  <link href='https://api.tiles.mapbox.com/mapbox.js/v2.1.9/mapbox.css' rel='stylesheet' />
+
+  <script src='https://api.tiles.mapbox.com/mapbox.js/plugins/geo-viewport/v0.1.1/geo-viewport.js'></script>
+  <script src='https://api.tiles.mapbox.com/mapbox.js/plugins/geojson-extent/v0.0.1/geojson-extent.js'></script>
+
+{% endblock %}
+
 {% block body %}
+
+  <div id="map" class="card">
+    <div class="card-content">
+
+    </div>
+
+  </div>
+  
   <h1>Latest posts</h1>
 
   {% if posts %}
@@ -17,3 +39,30 @@
 
   
 {% endblock %}
+
+{% block map %}
+<script>
+L.mapbox.accessToken = 'pk.eyJ1IjoiZGFuazUyOCIsImEiOiJzOVp0TzJnIn0.1c8obLmcPHN4LosoNan8DQ';
+var map = L.mapbox.map('map', 'mapbox.streets')
+    .setView([38.91338, -77.03236], 2);
+
+var featureLayer = L.mapbox.featureLayer()
+
+markers = [
+{% for post in posts %}
+L.marker([{{post.latitude}}, {{post.longitude}}], {
+    icon: L.mapbox.marker.icon({
+        'marker-size': 'large',
+        'marker-symbol': 'circle-stroked',
+        'marker-color': '#2196F3'
+    })
+}),
+{% endfor %}
+];
+
+var group = L.featureGroup(markers).addTo(map);
+map.fitBounds(group.getBounds());
+
+</script>
+{% endblock %}
+

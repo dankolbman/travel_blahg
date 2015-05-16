@@ -11,7 +11,7 @@ main = Blueprint('main', __name__)
 def index():
   """ Home page """
   # Show recent posts
-  p = Post.query.limit(5).all()
+  p = Post.query.limit(10).all()
   return render_template('index.html', posts=p)
 
 @main.route("/login", methods=["GET", "POST"])

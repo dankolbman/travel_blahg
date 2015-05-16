@@ -41,7 +41,7 @@
     <div class="card-content white-text">
     <div class="container">
 
-    <h1>New Post</h1>
+    <span class="card-title">New Post</span>
 
     <form role="form" action="{{ url_for('.write') }}" method="post">
       {{ form.hidden_tag() }}
@@ -97,4 +97,3 @@
   </div>
 
 {% endblock %}
-

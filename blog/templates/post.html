@@ -4,8 +4,107 @@
 
 {% block body %}
 
-  <h2>By {{ post.id }}</h2>
+  <div id="map" class="card">
+    <img id="static-map" src="">
+  </div>
 
-  <p>{{ post.body }}</p>
+  <div class="card">
+    <div class="card-content white-text">
+    <div class="container">
+    <span class="card-title">{{ post.title }}</span>
+    <div class="divider"></div>
+    <div class="card-action">
+      {{ post.timestamp.strftime('%B %d, %Y -  %I:%M %p') }}
+    </div>
 
+    <p>{{ post.body }}</p>
+
+    </div>
+    </div>
+  </div>
+
+
+
+{% endblock %}
+
+{% block map %}
+  <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+
+  <script src='https://api.tiles.mapbox.com/mapbox.js/v2.1.9/mapbox.js'></script>
+  <link href='https://api.tiles.mapbox.com/mapbox.js/v2.1.9/mapbox.css' rel='stylesheet' />
+
+  <script src='https://api.tiles.mapbox.com/mapbox.js/plugins/geo-viewport/v0.1.1/geo-viewport.js'></script>
+  <script src='https://api.tiles.mapbox.com/mapbox.js/plugins/geojson-extent/v0.0.1/geojson-extent.js'></script>
+
+  <script>
+    L.mapbox.accessToken = 'pk.eyJ1IjoiZGFuazUyOCIsImEiOiJzOVp0TzJnIn0.1c8obLmcPHN4LosoNan8DQ';
+
+    // This is an example using geojson-extent. See the full docs for full details
+    // https://github.com/mapbox/geojson-extent
+
+    // Declare a GeoJSON file with the two places we're interested in.
+    var sfAndDc = {
+      "type": "FeatureCollection",
+      "features": [
+        {
+          "type": "Feature",
+          "properties": {},
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              {{ post.longitude }},
+              {{ post.latitude }}
+            ]
+          }
+        },
+        {
+          "type": "Feature",
+          "properties": {},
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              {{ post.longitude }}+0.1,
+              {{ post.latitude }}+0.1
+            ]
+          }
+        },
+        {
+          "type": "Feature",
+          "properties": {},
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              {{ post.longitude }}-0.1,
+              {{ post.latitude }}-0.1
+            ]
+          }
+        }
+      ]
+    };
+
+    // Calculate a bounding box in west, south, east, north order.
+    //var bounds = geojsonExtent(sfAndDc);
+    bounds = [ {{ post.longitude-0.1 }}, {{post.latitude-0.1}},{{post.longitude+0.1}},{{post.latitude+0.1}} ];
+
+    // The size of the desired map.
+    var size = [750, 300];
+
+    // Calculate a zoom level and centerpoint for this map.
+    var vp = geoViewport.viewport(bounds, size);
+
+    // Create pins at places in the geojson file.
+    var pins = [];
+    pins.push('pin-l+2196F3(' + sfAndDc.features[0].geometry.coordinates.join(',') + ')');
+    
+
+    // Construct a static map url
+    // https://www.mapbox.com/developers/api/static/
+    document.getElementById('static-map').src =
+        'https://api.tiles.mapbox.com/v4/mapbox.streets/' +
+        pins.join(',') + '/' +
+        vp.center.join(',') + ',' +
+        vp.zoom + '/' +
+        size.join('x') + '.png' +
+        '?access_token=' + L.mapbox.accessToken;
+  </script>
 {% endblock %}
