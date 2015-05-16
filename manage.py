@@ -18,11 +18,11 @@ manager.add_command("clean", Clean())
 
 
 @manager.command
-def createuser(name, password):
+def createuser(name, password, email):
   if User.query.filter_by(username=name).first() != None:
     print('User with name', name, 'already exists!')
     return
-  user = User(name, password)
+  user = User(name, password, email)
   db.session.add(user)
   db.session.commit()
   print('Added user', user.username)

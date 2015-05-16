@@ -1,14 +1,20 @@
 <div class="col s12 m12 l6">
   <div class="card">
-    <div class="card-image">
-      <img id="post-{{post.id}}" src="http://materializecss.com/images/office.jpg">
+    {% if post.image_path %}
+    <div class="card-image small">
+      <img src="{{url_for('user.prox', path=post.image_path)}}">
     </div>
+    {% else %}
+    <div class="card-image">
+      <img id="post-{{post.id}}" src="">
+    </div>
+    {% endif %}
     <div class="card-content white-text">
       <a class="card-title truncate" href="{{ url_for('user.post', id=post.id) }}">
       {{ post.title }}
       </a>
       On {{ post.timestamp.strftime('%B %d, %Y -  %I:%M %p') }}
-      <p class="truncate">{{ post.body }}</p>
+      <p class="truncate">{{ post.text }}</p>
     </div>
     <div class="card-action">
       <a class="card-title" href="{{ url_for('user.post', id=post.id) }}">Read more</a>
@@ -16,7 +22,7 @@
   </div>
 </div>
 
-{% if not post.image %}
+{% if not post.image_path %}
 <script>
   L.mapbox.accessToken = 'pk.eyJ1IjoiZGFuazUyOCIsImEiOiJzOVp0TzJnIn0.1c8obLmcPHN4LosoNan8DQ';
 

@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+
+{% block title %}Upload a New Image{% endblock %}
+
+{% block scripts %}
+  {{ super() }}
+  <script>
+    function geoFindMe() {
+      var output = document.getElementById("out");
+      var lat_out = document.getElementById("lat");
+      var long_out = document.getElementById("long");
+
+      if (!navigator.geolocation){
+        output.innerHTML = "<p>Geolocation is not supported by your browser</p>";
+        return;
+      }
+
+      function success(position) {
+        var latitude  = position.coords.latitude;
+        var longitude = position.coords.longitude;
+        lat_out.value = latitude;
+        long_out.value = longitude;
+        output.innerHTML = "Found you!"
+      };
+
+      function error() {
+        output.innerHTML = "Unable to retrieve your location";
+      };
+
+      output.innerHTML = "<p>Locating…</p>";
+
+      navigator.geolocation.getCurrentPosition(success, error);
+    }
+  </script>
+
+{% endblock %}
+
+{% block body %}
+
+  <div class="card">`
+    <div class="card-content white-text">
+    <div class="container">
+
+    <span class="card-title">New Post</span>
+
+    <form role="form" action="{{ url_for('.new_image') }}" method="post" enctype=multipart/form-data>
+      {{ form.hidden_tag() }}
+
+      {{ form.title.label }}
+      {% if form.title.errors %}
+        {% for e in form.title.errors %}
+          <p class="help-block">{{ e }}</p>
+        {% endfor %}
+      {% endif %}
+      {{ form.title(class_="form-control") }}
+
+      {{ form.image.label }}
+      {% if form.image.errors %}
+        {% for e in form.image.errors %}
+          <p class="help-block">{{ e }}</p>
+        {% endfor %}
+      {% endif %}
+      {{ form.image(class="file") }}
+
+      {{ form.caption.label }}
+      {% if form.caption.errors %}
+        {% for e in form.caption.errors %}
+          <p class="help-block">{{ e }}</p>
+        {% endfor %}
+      {% endif %}
+      {{ form.caption(class_="materialize-textarea", length="1024") }}
+
+      <div class="row">
+        <div class="col m6">
+          {{ form.latitude.label }}
+          {% if form.latitude.errors %}
+            {% for e in form.latitude.errors %}
+              <p class="help-block">{{ e }}</p>
+            {% endfor %}
+          {% endif %}
+          {{ form.latitude(class_="form-control", id="lat") }}
+        </div>
+        <div class="col m6">
+          {{ form.longitude.label }}
+          {% if form.longitude.errors %}
+            {% for e in form.longitude.errors %}
+              <p class="help-block">{{ e }}</p>
+            {% endfor %}
+          {% endif %}
+          {{ form.longitude(class="form-control", id="long") }}
+        </div>
+      </div>
+
+      <div id="out"></div>
+
+      <div class="card-action">
+        <button class="btn-flat white-text" type="submit">Submit</button>
+        <a class="btn-flat white-text" onclick="geoFindMe()">Get location</a>
+      </div>
+    </form>
+
+    </div>
+    <div>
+  </div>
+
+{% endblock %}

@@ -4,3 +4,6 @@
 *.swp
 
 /venv
+dev_uploads/
+test_uploads/
+uploads/

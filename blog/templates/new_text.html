@@ -43,7 +43,7 @@
 
     <span class="card-title">New Post</span>
 
-    <form role="form" action="{{ url_for('.write') }}" method="post">
+    <form role="form" action="{{ url_for('.new_text') }}" method="post">
       {{ form.hidden_tag() }}
 
       {{ form.title.label }}
@@ -54,13 +54,13 @@
       {% endif %}
       {{ form.title(class_="form-control") }}
 
-      {{ form.body.label }}
-      {% if form.body.errors %}
-        {% for e in form.body.errors %}
+      {{ form.text.label }}
+      {% if form.text.errors %}
+        {% for e in form.text.errors %}
           <p class="help-block">{{ e }}</p>
         {% endfor %}
       {% endif %}
-      {{ form.body(class_="materialize-textarea") }}
+      {{ form.text(class_="materialize-textarea") }}
 
 
       <div class="row">

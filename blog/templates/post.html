@@ -10,14 +10,23 @@
 
   <div class="card">
     <div class="card-content white-text">
+    {% if post.image_path %}
+    <div class="card-image">
+      <img src="{{url_for('user.prox', path=post.image_path)}}">
+      <span class="card-title">Card Title</span>
+    </div>
+    {% endif %}
     <div class="container">
     <span class="card-title">{{ post.title }}</span>
     <div class="divider"></div>
     <div class="card-action">
       {{ post.timestamp.strftime('%B %d, %Y -  %I:%M %p') }}
     </div>
-
-    <p>{{ post.body }}</p>
+    {% if post.text %}
+      <p>{{ post.text }}</p>
+    {% elif post.caption %}
+      <p>{{ post.caption }}</p>
+    {% endif %}
 
     </div>
     </div>

@@ -1,10 +1,11 @@
-from flask import Blueprint, render_template, flash, request, redirect, url_for
+from flask import Blueprint, render_template, flash, request, redirect, url_for, current_app
 from flask.ext.login import login_user, logout_user, login_required
 
 from blog.extensions import cache
 from blog.forms import LoginForm
 from blog.models import User, Post
 
+import os
 main = Blueprint('main', __name__)
 
 @main.route('/')
