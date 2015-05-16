@@ -6,7 +6,7 @@ from werkzeug import secure_filename
 
 from blog.extensions import cache
 from blog.models import db
-from blog.forms import CreatePostForm, CreateImageForm
+from blog.forms import CreatePostForm, CreateImageForm, EditProfileForm
 from blog.models import User, Post, TextPost, ImagePost
 
 user = Blueprint('user', __name__)
@@ -68,10 +68,21 @@ def new_image():
       return redirect(url_for('.post', id=imagepost.id))
   return render_template('new_image.html', form=form)
 
-@user.route('/edit_profile')
+@user.route('/edit_profile', methods=['GET','POST'])
 @login_required
 def edit_profile():
-  return 'Editing profile'
+  form = EditProfileForm(username=current_user.username,\
+                         email=current_user.email,\
+                         api_key=current_user.api_key)
+  if form.validate_on_submit():
+    current_user.email = form.email.data
+    if len(form.password.data)>5 and form.password.data == form.password2.data:
+      current_user.set_password(form.password.data)
+
+    db.session.commit()
+    flash('Your profile has been updated.')
+    return redirect(url_for('main.index'))
+  return render_template('user/edit_profile.html', form=form)
 
 @user.route('/post/<int:id>', methods=['GET', 'POST'])
 def post(id):

@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% block title %}Login{% endblock %}
+
+{% block body %}
+  <div class="card">`
+    <div class="card-content white-text">
+    <div class="container">
+
+    <span class="card-title">{{ current_user.username }}'s Profile</span>
+
+    <form role="form" action="{{ url_for('.edit_profile') }}" method="post">
+      {{ form.hidden_tag() }}
+
+      {{ form.username.label }}
+      {% if form.username.errors %}
+        {% for e in form.username.errors %}
+          <p class="help-block">{{ e }}</p>
+        {% endfor %}
+      {% endif %}
+      {{ form.username(class="form-control", readonly=True, disabled=True) }}
+
+      {{ form.email.label }}
+      {% if form.email.errors %}
+        {% for e in form.email.errors %}
+          <p class="help-block">{{ e }}</p>
+        {% endfor %}
+      {% endif %}
+      {{ form.email(class_="form-control") }}
+
+      {{ form.password.label }}
+      {% if form.password.errors %}
+          {% for e in form.password.errors %}
+              <p class="help-block">{{ e }}</p>
+          {% endfor %}
+      {% endif %}
+      {{ form.password(class_="form-control") }}
+
+      {{ form.password2.label }}
+      {% if form.password2.errors %}
+          {% for e in form.password2.errors %}
+              <p class="help-block">{{ e }}</p>
+          {% endfor %}
+      {% endif %}
+      {{ form.password2(class_="form-control") }}
+
+      {{ form.api_key.label }}
+      {% if form.api_key.errors %}
+          {% for e in form.api_key.errors %}
+              <p class="help-block">{{ e }}</p>
+          {% endfor %}
+      {% endif %}
+      {{ form.api_key(class_="form-control", readonly=True) }}
+
+      <div class="card-action">
+        <button class="btn-flat white-text waves-effect waves-light" type="submit">Apply</button>
+      </div>
+    </form>
+
+    </div>
+    <div>
+  </div>
+{% endblock %}
+

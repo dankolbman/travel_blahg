@@ -1,3 +1,4 @@
+import hashlib, random
 from datetime import datetime
 
 from flask.ext.sqlalchemy import SQLAlchemy
@@ -12,6 +13,7 @@ class User(db.Model, UserMixin):
   username = db.Column(db.String(32))
   password = db.Column(db.String())
   email = db.Column(db.String())
+  api_key = db.Column(db.String(64))
 
   submitted = db.relationship('Post', backref='author', lazy='dynamic')
 
@@ -19,12 +21,16 @@ class User(db.Model, UserMixin):
     self.username = username
     self.email = email
     self.set_password(password)
+    self.new_api_key()
 
   def set_password(self, password):
     self.password = generate_password_hash(password)
 
   def check_password(self, value):
     return check_password_hash(self.password, value)
+
+  def new_api_key(self):
+     self.api_key = hashlib.sha224(str(random.getrandbits(256)).encode('utf-8')).hexdigest()
 
   def is_authenticated(self):
     if isinstance(self, AnonymousUserMixin):
