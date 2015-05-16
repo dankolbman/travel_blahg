@@ -33,6 +33,11 @@ def write():
     return redirect(url_for('.post', id=post.id))
   return render_template('new_post.html', form=form)
 
+@user.route('/edit_profile')
+@login_required
+def edit_profile():
+  return 'Editing profile'
+
 @user.route('/post/<int:id>', methods=['GET', 'POST'])
 def post(id):
   p = Post.query.get_or_404(id)
