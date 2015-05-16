@@ -1,3 +1,13 @@
+Sweet Stuff I'm Using
+---------------------
+
+[Flask](http://flask.pocoo.org/docs/0.10/) - A Python framework
+
+[Materialize](http://materializecss.com/) - For styling
+
+[Mapbox](https://www.mapbox.com/) - Cool maps
+
+
 Deployment
 ----------
 
