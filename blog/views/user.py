@@ -53,7 +53,7 @@ def new_text():
 
     flash("You made a new post!")
     return redirect(url_for('.post', id=textpost.id))
-  return render_template('new_text.html', form=form)
+  return render_template('user/new_text.html', form=form)
 
 @user.route('/new_image', methods=['GET','POST'])
 @login_required
@@ -82,7 +82,18 @@ def new_image():
       db.session.add(imagepost)
       db.session.commit()
       return redirect(url_for('.post', id=imagepost.id))
-  return render_template('new_image.html', form=form)
+  return render_template('user/new_image.html', form=form)
+
+@user.route('/delete/<int:id>')
+@login_required
+def delete_post(id):
+  """ Delete a post """
+  p = Post.query.get(id)
+  if p.author_id != current_user.id:
+    return 'This isn\'t your post!!!'
+  else:
+    return 'Are you sure you want to delete "{0}"?'.format(p.title)
+  
 
 @user.route('/edit_profile', methods=['GET','POST'])
 @login_required

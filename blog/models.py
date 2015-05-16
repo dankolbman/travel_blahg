@@ -62,7 +62,7 @@ class Post(db.Model):
   timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow(), nullable=False)
   latitude = db.Column(db.Float, default=43.165556, nullable=False)
   longitude = db.Column(db.Float, default=-77.611389, nullable=False)
-  author_id = db.Column(db.Integer, db.ForeignKey('user.id'), primary_key=True, nullable=False)
+  author_id = db.Column(db.Integer, db.ForeignKey('user.id'), index=True, nullable=False)
   __mapper_args__ = {'polymorphic_on': post_type }
 
   def get_id(self):
