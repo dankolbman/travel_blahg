@@ -1,0 +1,12 @@
+#map {
+  height: 300px;
+}
+
+#static-map {
+  width: 100%;
+}
+
+/* Keep map components from overlaying nav */
+.leaflet-bottom, .leaflet-top {
+  z-index: 1;
+}
