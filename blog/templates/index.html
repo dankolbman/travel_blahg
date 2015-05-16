@@ -52,10 +52,19 @@ markers = [
 L.marker([{{post.latitude}}, {{post.longitude}}], {
     icon: L.mapbox.marker.icon({
         'marker-size': 'large',
-        'marker-symbol': 'circle-stroked',
+        {% if post.image_path %}
+        'marker-symbol': 'camera',
+        {% else %}
+        'marker-symbol': 'library',
+        {% endif %}
         'marker-color': '#2196F3'
     })
-}),
+})
+{% if post.image_path %}
+.bindPopup('<img src="{{url_for('user.prox', path=post.image_path)}}" height="120px"/>',{closeButton : false}),
+{% elif post.text %}
+.bindPopup('<p class="truncate">{{post.title}}</p><a class="black-text" href="{{ url_for('user.post', id=post.id) }}">Read</a>',{closeButton : false}),
+{% endif %}
 {% endfor %}
 ];
 
