@@ -6,6 +6,8 @@ from flask import Blueprint, render_template, flash, request, redirect, url_for,
 from flask.ext.login import login_required, current_user
 from werkzeug import secure_filename 
 
+from sqlalchemy import desc
+
 from blog.extensions import cache
 from blog.models import db
 from blog.forms import CreatePostForm, CreateImageForm, EditProfileForm
@@ -15,7 +17,17 @@ user = Blueprint('user', __name__)
 
 @user.route('/')
 def home():
-  return 'Hi user'
+  p = Post.query.filter_by(author_id=current_user.id).order_by(desc(Post.timestamp)).limit(10).all()
+  return render_template('index.html', posts=p, user=current_user)
+
+@user.route('/<path:username>')
+def user_page(username):
+  user =  User.query.filter_by(username=username).first()
+  if user != None:
+    p = Post.query.filter_by(author_id=user.id).order_by(desc(Post.timestamp)).limit(10).all()
+    return render_template('index.html', posts=p, user=user)
+  else:
+    return 'Couldn\'t find user {0}'.format(username)
 
 @user.route('/image/<path:path>', methods=['GET'])
 def prox(path):

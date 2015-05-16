@@ -24,8 +24,12 @@
     </div>
 
   </div>
+  {% if user %}
+    <h1>{{ user.username }}'s latest posts</h1>
+  {% else %}
+    <h1>Latest posts</h1>
+  {% endif %}
   
-  <h1>Latest posts</h1>
 
   {% if posts %}
     <div class="row">
