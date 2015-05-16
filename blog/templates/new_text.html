@@ -84,11 +84,17 @@
         </div>
       </div>
 
-      <div id="out"></div>
-
       <div class="card-action">
-        <button class="btn-flat white-text" type="submit">Submit</button>
-        <a class="btn-flat white-text" onclick="geoFindMe()">Get location</a>
+        <ul>
+        <li><a class="btn-flat white-text waves-effect waves-light" type="none" action="none" onclick="geoFindMe()">
+          <i class="mdi-maps-place left"></i>
+          Get location
+        </a><div id="out" class="right"></div></li>
+        <li><button class="btn-flat white-text waves-effect waves-light" type="submit">
+          Submit
+          <i class="mdi-content-send left"></i>
+        </button></li>
+        </ul>
       </div>
     </form>
 

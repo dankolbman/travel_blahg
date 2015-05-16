@@ -62,13 +62,15 @@
       {% endif %}
       {{ form.image(class="file") }}
 
+      <p>
       {{ form.caption.label }}
       {% if form.caption.errors %}
         {% for e in form.caption.errors %}
           <p class="help-block">{{ e }}</p>
         {% endfor %}
       {% endif %}
-      {{ form.caption(class_="materialize-textarea", length="1024") }}
+      {{ form.caption(class_="materialize-textarea", length="512") }}
+      </p>
 
       <div class="row">
         <div class="col m6">
@@ -91,11 +93,18 @@
         </div>
       </div>
 
-      <div id="out"></div>
 
       <div class="card-action">
-        <button class="btn-flat white-text" type="submit">Submit</button>
-        <a class="btn-flat white-text" onclick="geoFindMe()">Get location</a>
+        <ul>
+        <li><a class="btn-flat white-text waves-effect waves-light" type="none" action="none" onclick="geoFindMe()">
+          <i class="mdi-maps-place left"></i>
+          Get location
+        </a><div id="out" class="right"></div></li>
+        <li><button class="btn-flat white-text waves-effect waves-light" type="submit">
+          Submit
+          <i class="mdi-content-send left"></i>
+        </button></li>
+        </ul>
       </div>
     </form>
 

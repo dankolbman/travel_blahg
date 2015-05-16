@@ -3,27 +3,38 @@
 {% block title %}Login{% endblock %}
 
 {% block body %}
-  <h1>Login</h1>
-  <form role="form" action="{{ url_for('.login') }}" method="post">
-    {{ form.hidden_tag() }}
+  <div class="card">`
+    <div class="card-content white-text">
+    <div class="container">
 
-    {{ form.username.label }}
-    {% if form.username.errors %}
-      {% for e in form.username.errors %}
-        <p class="help-block">{{ e }}</p>
-      {% endfor %}
-    {% endif %}
-    {{ form.username(class_="form-control") }}
+    <span class="card-title">Login</span>
 
-    {{ form.password.label }}
-    {% if form.password.errors %}
-        {% for e in form.password.errors %}
-            <p class="help-block">{{ e }}</p>
+    <form role="form" action="{{ url_for('.login') }}" method="post">
+      {{ form.hidden_tag() }}
+
+      {{ form.username.label }}
+      {% if form.username.errors %}
+        {% for e in form.username.errors %}
+          <p class="help-block">{{ e }}</p>
         {% endfor %}
-    {% endif %}
-    {{ form.password(class_="form-control") }}
+      {% endif %}
+      {{ form.username(class_="form-control") }}
 
-    <button type="submit">Submit</button>
-  </form>
+      {{ form.password.label }}
+      {% if form.password.errors %}
+          {% for e in form.password.errors %}
+              <p class="help-block">{{ e }}</p>
+          {% endfor %}
+      {% endif %}
+      {{ form.password(class_="form-control") }}
+
+      <div class="card-action">
+        <button class="btn-flat white-text waves-effect waves-light" type="submit">Log me in!</button>
+      </div>
+    </form>
+
+    </div>
+    <div>
+  </div>
 {% endblock %}
 
