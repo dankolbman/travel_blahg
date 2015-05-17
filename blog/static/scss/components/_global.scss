@@ -27,6 +27,9 @@ ul {
 a {
 	color: $link-color;
 	text-decoration: none;
+
+  // Gets rid of tap active state
+  -webkit-tap-highlight-color: transparent;
 }
 
 
@@ -34,7 +37,6 @@ a {
 .valign-wrapper {
   @include flexbox();
   @include align(center);
-  @include justify-content(center);
 
   .valign {
     display: block;
@@ -128,9 +130,36 @@ video.responsive-video {
 }
 
 
+// Pagination
+
+.pagination {
+
+  li {
+    font-size: 1.2rem;
+    float: left;
+    width: 30px;
+    height: 30px;
+    margin: 0 10px;
+    border-radius: 2px;
+    text-align: center;
+
+    a { color: #444; }
+
+    &.active a { color: #fff; }
+
+    &.active { background-color: $primary-color; }
+
+    &.disabled a { color: #999; }
+
+    i {
+      font-size: 2rem;
+      line-height: 1.8rem;
+    }
+  }
+}
 
 
-// parallax
+// Parallax
 .parallax-container {
   position: relative;
   overflow: hidden;
@@ -148,24 +177,15 @@ video.responsive-video {
   img {
     display: none;
     position: absolute;
+    left: 50%;
     bottom: 0;
-    width: 100%;
+    min-width: 100%;
+    min-height: 100%;
+    -webkit-transform: translate3d(0,0,0);
+            transform: translate3d(0,0,0);
+    transform: translateX(-50%);
   }
 }
-@media #{$medium-and-down} {
-  .parallax-container {
-    height: auto;
-  }
-  .parallax {
-    position: relative;
-    width: 100%;
-
-    img {
-      position: relative;
-    }
-  }
-}
-
 
 // Pushpin
 .pin-top, .pin-bottom {
@@ -180,11 +200,11 @@ video.responsive-video {
 **********************/
 
 ul.staggered-list li {
-  @include opacity(0);
+  opacity: 0;
 }
 
 .fade-in {
-  @include opacity(0);
+  opacity: 0;
   transform-origin: 0 50%;
 }
 
@@ -341,6 +361,10 @@ td, th{
       tr {
         display: block;
         padding: 0 10px 0 0;
+
+        th::before {
+          content: "\00a0";
+        }
       }
     }
     tbody {
@@ -386,19 +410,63 @@ td, th{
 
 // Collections
 .collection {
-  background-color: $collection-bg-color;
   margin: $element-top-margin 0 $element-bottom-margin 0;
   border: 1px solid $collection-border-color;
   border-radius: 2px;
+  overflow: hidden;
+  position: relative;
 
   .collection-item {
+    background-color: $collection-bg-color;
     line-height: 1.5rem;
     padding: 10px 20px;
-    margin: 0px;
+    margin: 0;
     border-bottom: 1px solid $collection-border-color;
-      &:last-child {
-        border-bottom: none;
+
+    // Avatar Collection
+    &.avatar {
+      height: 84px;
+      padding-left: 72px;
+      position: relative;
+
+      .circle {
+        position: absolute;
+        width: 42px;
+        height: 42px;
+        overflow: hidden;
+        left: 15px;
+        display: inline-block;
+        vertical-align: middle;
       }
+      i.circle {
+        font-size: 18px;
+        line-height: 42px;
+        color: #fff;
+        background-color: #999;
+        text-align: center;
+      }
+
+
+      .title {
+        font-size: 16px;
+      }
+
+      p {
+        margin: 0;
+      }
+
+      .secondary-content {
+        position: absolute;
+        top: 16px;
+        right: 16px;
+      }
+
+    }
+
+
+    &:last-child {
+      border-bottom: none;
+    }
 
     &.active {
       background-color: $collection-active-bg-color;
@@ -418,42 +486,12 @@ td, th{
 
   &.with-header {
     .collection-header {
+      background-color: $collection-bg-color;
       border-bottom: 1px solid $collection-border-color;
       padding: 10px 20px;
     }
     .collection-item {
      padding-left: 30px;
-    }
-  }
-
-
-
-  //Pagination
-  &.pagination {
-    display: inline-block;
-
-      ul{
-        background-color: transparent;
-        font-size: 0;
-        display: inline-block;
-      }
-    li {
-      display: inline;
-      font-weight: 500;
-      margin: 0px;
-      padding: 0px;
-      font-size: 1rem;
-
-      a {
-       padding: 0px 5px;
-      }
-      &.active {
-        background-color: color('light-blue', 'base');
-        color: #FFF;
-      }
-      &:hover {
-        background-color: color('light-blue', 'lighten-5');
-      }
     }
   }
 
@@ -473,7 +511,8 @@ span.badge {
   font-size: 1rem;
   line-height: inherit;
   color: color('grey', 'darken-1');
-  float: right;
+  position: absolute;
+  right: 15px;
   @include box-sizing(border-box);
 
   &.new {
@@ -481,7 +520,7 @@ span.badge {
     font-size: 0.8rem;
     color: #fff;
     background-color: $badge-bg-color;
-    @include border-radius(2px);
+    border-radius: 2px;
   }
   &.new:after {
     content: " new";
@@ -495,6 +534,9 @@ span.badge {
     padding-top: 30px;
     height: 0;
     overflow: hidden;
+    &.no-controls {
+      padding-top: 0;
+    }
 
     iframe, object, embed {
       position: absolute;
@@ -512,7 +554,7 @@ span.badge {
     display: block;
     width: 100%;
     background-color: lighten($progress-bar-color, 40%);
-    @include border-radius(2px);
+    border-radius: 2px;
     margin: $element-top-margin 0 $element-bottom-margin 0;
     overflow: hidden;
   .determinate {
@@ -586,6 +628,10 @@ span.badge {
   Utility Classes
 *******************/
 
+.hide {
+  display: none !important;
+}
+
 // Text Align
 .left-align {
   text-align: left;
@@ -616,7 +662,7 @@ span.badge {
 
 // Circle
 .circle {
-  @include border-radius(50%);
+  border-radius: 50%;
 }
 
 .center-block {
@@ -629,4 +675,8 @@ span.badge {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+.no-padding {
+  padding: 0 !important;
 }

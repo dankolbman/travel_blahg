@@ -57,37 +57,49 @@
         // Set to width
         if (options.menuWidth != 240) {
           menu_id.css('width', options.menuWidth);
-          if (!menu_id.hasClass('fixed')) {
-            menu_id.css('left', -1 * (options.menuWidth + 10));
-          }
-        }
-
-        // Add alignment
-        if (options.edge != 'left') {
-          menu_id.addClass('right-aligned');
         }
 
         // Add Touch Area
         $('body').append($('<div class="drag-target"></div>'));
-        if (options.edge === 'left') {
-          $('.drag-target').css({'left': 0})
+
+        if (options.edge == 'left') {
+          menu_id.css('left', -1 * (options.menuWidth + 10));
+          $('.drag-target').css({'left': 0}); // Add Touch Area
         }
         else {
-          $('.drag-target').css({'right': 0})
+          menu_id.addClass('right-aligned') // Change text-alignment to right
+            .css('right', -1 * (options.menuWidth + 10))
+            .css('left', '');
+          $('.drag-target').css({'right': 0}); // Add Touch Area
         }
+
+        // If fixed sidenav, bring menu out
+        if (menu_id.hasClass('fixed')) {
+            if ($(window).width() > 992) {
+              menu_id.css('left', 0);
+            }
+          }
 
         // Window resize to reset on large screens fixed
         if (menu_id.hasClass('fixed')) {
           $(window).resize( function() {
-            if ($(window).width() > 1200) {
-              if (menu_id.attr('style')) {
+            if (window.innerWidth > 992) {
+              // Close menu if window is resized bigger than 992 and user has fixed sidenav
+              if ($('#sidenav-overlay').css('opacity') != 0 && menuOut) {
+                removeMenu(true);
+              }
+              else {
                 menu_id.removeAttr('style');
                 menu_id.css('width', options.menuWidth);
               }
             }
-            if ($('#sidenav-overlay').css('opacity') != 0 && menuOut) {
-              $('#sidenav-overlay').trigger('click');
+            else if (menuOut === false){
+              if (options.edge === 'left')
+                menu_id.css('left', -1 * (options.menuWidth + 10));
+              else
+                menu_id.css('right', -1 * (options.menuWidth + 10));
             }
+
           });
         }
 
@@ -98,7 +110,7 @@
           });
         }
 
-        function removeMenu() {
+        function removeMenu(restoreNav) {
           panning = false;
           menuOut = false;
           $('#sidenav-overlay').velocity({opacity: 0}, {duration: 200, queue: false, easing: 'easeOutQuad',
@@ -108,15 +120,38 @@
           if (options.edge === 'left') {
             // Reset phantom div
             $('.drag-target').css({width: '', right: '', left: '0'});
-            menu_id.velocity({left: -1 * (options.menuWidth + 10)}, {duration: 200, queue: false, easing: 'easeOutCubic'});
+            menu_id.velocity(
+              {left: -1 * (options.menuWidth + 10)},
+              { duration: 200,
+                queue: false,
+                easing: 'easeOutCubic',
+                complete: function() {
+                  if (restoreNav == true) {
+                    // Restore Fixed sidenav
+                    menu_id.removeAttr('style');
+                    menu_id.css('width', options.menuWidth);
+                  }
+                }
+
+            });
           }
           else {
             // Reset phantom div
             $('.drag-target').css({width: '', right: '0', left: ''});
-            menu_id.velocity({right: -1 * (options.menuWidth + 10)}, {duration: 200, queue: false, easing: 'easeOutCubic'});
+            menu_id.velocity(
+              {right: -1 * (options.menuWidth + 10)},
+              { duration: 200,
+                queue: false,
+                easing: 'easeOutCubic',
+                complete: function() {
+                  if (restoreNav == true) {
+                    // Restore Fixed sidenav
+                    menu_id.removeAttr('style');
+                    menu_id.css('width', options.menuWidth);
+                  }
+                }
+              });
           }
-
-          // enable_scroll();
         }
 
 
@@ -125,25 +160,27 @@
         var panning = false;
         var menuOut = false;
 
+        $('.drag-target').on('click', function(){
+          removeMenu();
+        })
+
         $('.drag-target').hammer({
           prevent_default: false
-        }).bind('tap', function(e) {
-          // capture overlay click on drag target
-          // if (menuOut && !panning) {
-            $('#sidenav-overlay').trigger('click');
-          // }
         }).bind('pan', function(e) {
 
-          if (e.gesture.pointerType === "touch") {
+          if (e.gesture.pointerType == "touch") {
 
             var direction = e.gesture.direction;
             var x = e.gesture.center.x;
             var y = e.gesture.center.y;
             var velocityX = e.gesture.velocityX;
 
-            if (!$('#sidenav-overlay').length) {
+            // If overlay does not exist, create one and if it is clicked, close menu
+            if ($('#sidenav-overlay').length === 0) {
               var overlay = $('<div id="sidenav-overlay"></div>');
-              overlay.css('opacity', 0).click(function(){ removeMenu(); });
+              overlay.css('opacity', 0).click( function(){
+                removeMenu();
+              });
               $('body').append(overlay);
             }
 
@@ -152,30 +189,34 @@
               if (x > options.menuWidth) { x = options.menuWidth; }
               else if (x < 0) { x = 0; }
             }
-            else {
-              if (x < $(window).width() - options.menuWidth) { x = $(window).width() - options.menuWidth; }
-            }
 
             if (options.edge === 'left') {
               // Left Direction
               if (x < (options.menuWidth / 2)) { menuOut = false; }
               // Right Direction
               else if (x >= (options.menuWidth / 2)) { menuOut = true; }
-            }
-            else {
-              // Left Direction
-              if (x < ($(window).width() - options.menuWidth / 2)) { menuOut = true; }
-              // Right Direction
-              else if (x >= ($(window).width() - options.menuWidth / 2)) { menuOut = false; }
-            }
 
-
-            if (options.edge === 'left') {
               menu_id.css('left', (x - options.menuWidth));
             }
             else {
-              menu_id.css('right', -1 *(x - options.menuWidth / 2));
+              // Left Direction
+              if (x < ($(window).width() - options.menuWidth / 2)) {
+                menuOut = true;
+              }
+              // Right Direction
+              else if (x >= ($(window).width() - options.menuWidth / 2)) {
+               menuOut = false;
+             }
+              var rightPos = -1 *(x - options.menuWidth / 2);
+              if (rightPos > 0) {
+                rightPos = 0;
+              }
+
+              menu_id.css('right', rightPos);
             }
+
+
+
 
             // Percentage overlay
             if (options.edge === 'left') {
@@ -187,54 +228,53 @@
               $('#sidenav-overlay').velocity({opacity: overlayPerc }, {duration: 50, queue: false, easing: 'easeOutQuad'});
             }
           }
+
         }).bind('panend', function(e) {
-          if (e.gesture.pointerType === "touch") {
+          if (e.gesture.pointerType == "touch") {
             var velocityX = e.gesture.velocityX;
             panning = false;
-
             if (options.edge === 'left') {
-              if (menuOut || velocityX < -0.5) {
+              // If velocityX <= 0.3 then the user is flinging the menu closed so ignore menuOut
+              if ((menuOut && velocityX <= 0.3) || velocityX < -0.5) {
                 menu_id.velocity({left: 0}, {duration: 300, queue: false, easing: 'easeOutQuad'});
                 $('#sidenav-overlay').velocity({opacity: 1 }, {duration: 50, queue: false, easing: 'easeOutQuad'});
                 $('.drag-target').css({width: '50%', right: 0, left: ''});
               }
               else if (!menuOut || velocityX > 0.3) {
-                menu_id.velocity({left: -240}, {duration: 300, queue: false, easing: 'easeOutQuad'});
-                $('#sidenav-overlay').velocity({opacity: 0 }, {duration: 50, queue: false, easing: 'easeOutQuad',
+                menu_id.velocity({left: -1 * (options.menuWidth + 10)}, {duration: 200, queue: false, easing: 'easeOutQuad'});
+                $('#sidenav-overlay').velocity({opacity: 0 }, {duration: 200, queue: false, easing: 'easeOutQuad',
                   complete: function () {
                     $(this).remove();
                   }});
-                $('.drag-target').css({width: '10%', right: '', left: 0});
+                $('.drag-target').css({width: '10px', right: '', left: 0});
               }
             }
             else {
-              if (menuOut || velocityX > 0.5) {
+              if ((menuOut && velocityX >= -0.3) || velocityX > 0.5) {
                 menu_id.velocity({right: 0}, {duration: 300, queue: false, easing: 'easeOutQuad'});
                 $('#sidenav-overlay').velocity({opacity: 1 }, {duration: 50, queue: false, easing: 'easeOutQuad'});
                 $('.drag-target').css({width: '50%', right: '', left: 0});
               }
               else if (!menuOut || velocityX < -0.3) {
-                menu_id.velocity({right: -240}, {duration: 300, queue: false, easing: 'easeOutQuad'});
-                $('#sidenav-overlay').velocity({opacity: 0 }, {duration: 50, queue: false, easing: 'easeOutQuad',
+                menu_id.velocity({right: -1 * (options.menuWidth + 10)}, {duration: 200, queue: false, easing: 'easeOutQuad'});
+                $('#sidenav-overlay').velocity({opacity: 0 }, {duration: 200, queue: false, easing: 'easeOutQuad',
                   complete: function () {
                     $(this).remove();
                   }});
-                $('.drag-target').css({width: '10%', right: 0, left: ''});
+                $('.drag-target').css({width: '10px', right: 0, left: ''});
               }
             }
-
 
           }
         });
 
           $this.click(function() {
-            if (menu_id.hasClass('active')) {
+            if (menuOut == true) {
               menuOut = false;
               panning = false;
               removeMenu();
             }
             else {
-              // disable_scroll();
 
               if (options.edge === 'left') {
                 $('.drag-target').css({width: '50%', right: 0, left: ''});
@@ -243,6 +283,7 @@
               else {
                 $('.drag-target').css({width: '50%', right: '', left: 0});
                 menu_id.velocity({right: 0}, {duration: 300, queue: false, easing: 'easeOutQuad'});
+                menu_id.css('left','');
               }
 
               var overlay = $('<div id="sidenav-overlay"></div>');
@@ -251,14 +292,14 @@
                 menuOut = false;
                 panning = false;
                 removeMenu();
-                overlay.animate({opacity: 0}, {duration: 300, queue: false, easing: 'easeOutQuad',
+                overlay.velocity({opacity: 0}, {duration: 300, queue: false, easing: 'easeOutQuad',
                   complete: function() {
                     $(this).remove();
                   } });
 
               });
               $('body').append(overlay);
-              overlay.animate({opacity: 1}, {duration: 300, queue: false, easing: 'easeOutQuad',
+              overlay.velocity({opacity: 1}, {duration: 300, queue: false, easing: 'easeOutQuad',
                 complete: function () {
                   menuOut = true;
                   panning = false;

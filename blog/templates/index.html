@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% import "includes/pagination.html" as macros %}
 
 {% block title %}Home{% endblock %}
 
@@ -20,9 +21,7 @@
 
   <div id="map" class="card">
     <div class="card-content">
-
     </div>
-
   </div>
   {% if user %}
     <h1 class="center-align">{{ user.username }}'s latest posts</h1>
@@ -34,12 +33,18 @@
   {% if posts %}
     <div class="row">
     {% for post in posts %}
-
       {% include 'includes/post.html' %}
-
     {% endfor %}
     </div>
+
   {% endif %}
+
+  {% if pagination %}
+    <div class="container">
+      {{ macros.pager(pagination, '.index') }}
+    </div>
+  {% endif %}
+
 
   
 {% endblock %}

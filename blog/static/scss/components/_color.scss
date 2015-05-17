@@ -6,6 +6,7 @@
 
 // Google Color Palette defined: http://www.google.com/design/spec/style/color.html
 
+
 $materialize-red: (
   "lighten-5":  #fdeaeb,
   "lighten-4":  #f8c1c3,
@@ -331,8 +332,9 @@ $grey: (
 );
 
 $shades: (
-  "black":      #000000,
-  "white":      #FFFFFF
+  "black":        #000000,
+  "white":        #FFFFFF,
+  "transparent":  transparent
 );
 
 $colors: (

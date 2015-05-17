@@ -13,9 +13,13 @@ main = Blueprint('main', __name__)
 @main.route('/')
 def index():
   """ Home page """
-  # Show recent posts
-  p = Post.query.order_by(desc(Post.timestamp)).limit(10).all()
-  return render_template('index.html', posts=p)
+  # Show recent posts and paginate
+  page = request.args.get('page', 1, type=int)
+  pagination = Post.query.order_by(Post.timestamp.desc()).paginate(
+    page, per_page=10, error_out=False)
+  posts = pagination.items
+
+  return render_template('index.html', posts=posts, pagination=pagination)
 
 @main.route("/login", methods=["GET", "POST"])
 def login():
