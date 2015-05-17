@@ -1,6 +1,12 @@
 {% extends "base.html" %}
 
-{% block title %}Write a New Post{% endblock %}
+{% block title %}
+  {% if request.path == '/user/text'%}
+    New Post 
+  {% else %}
+    Edit Post
+  {% endif %}
+{% endblock %}
 
 {% block scripts %}
   {{ super() }}
@@ -41,9 +47,17 @@
     <div class="card-content white-text">
     <div class="container">
 
-    <span class="card-title">New Post</span>
+    <span class="card-title">
+    {% if request.path == '/user/text'%}
+      New Post <i class="mdi-editor-mode-edit right"></i>
+    {% else %}
+      Edit Post <i class="mdi-editor-mode-edit right"></i>
+    {% endif %}
+    </span>
+    <div class="divider"></div>
+    <div class="section">
 
-    <form role="form" action="{{ url_for('.new_text') }}" method="post">
+    <form role="form" action="{{request.path}}" method="post">
       {{ form.hidden_tag() }}
 
       {{ form.title.label }}
@@ -94,9 +108,16 @@
           Submit
           <i class="mdi-content-send left"></i>
         </button></li>
+        {% if request.path != '/user/text'%}
+          <li><a href="{{ url_for('user.delete_post', id=pid)}}" class="btn-flat red darken-2 white-text waves-effect waves-light" type="submit">
+            Delete
+            <i class="mdi-action-delete left"></i>
+          </a></li>
+        {% endif %}
         </ul>
       </div>
     </form>
+    </div>
 
     </div>
     <div>

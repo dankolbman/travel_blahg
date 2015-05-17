@@ -1,6 +1,12 @@
 {% extends "base.html" %}
 
-{% block title %}New Postcard{% endblock %}
+{% block title %}
+  {% if request.path == '/user/image'%}
+    New Postcard
+  {% else %}
+    Edit Postcard
+  {% endif %}
+{% endblock %}
 
 {% block scripts %}
   {{ super() }}
@@ -41,7 +47,15 @@
     <div class="card-content white-text">
     <div class="container">
 
-    <span class="card-title">New Postcard</span>
+    <span class="card-title">
+    {% if request.path == '/user/new_image'%}
+      New Postcard <i class="mdi-image-photo-camera right"></i> 
+    {% else %}
+      Edit Postcard <i class="mdi-image-photo-camera right"></i>
+    {% endif %}
+    </span>
+    <div class="divider"></div>
+    <div class="section">
 
     <form role="form" action="{{ url_for('.new_image') }}" method="post" enctype=multipart/form-data>
       {{ form.hidden_tag() }}
@@ -54,13 +68,15 @@
       {% endif %}
       {{ form.title(class_="form-control") }}
 
-      {{ form.image.label }}
-      {% if form.image.errors %}
-        {% for e in form.image.errors %}
-          <p class="help-block">{{ e }}</p>
-        {% endfor %}
+      {% if request.path == '/user/new_image'%}
+        {{ form.image.label }}
+        {% if form.image.errors %}
+          {% for e in form.image.errors %}
+            <p class="help-block">{{ e }}</p>
+          {% endfor %}
+        {% endif %}
+        {{ form.image(class="file") }}
       {% endif %}
-      {{ form.image(class="file") }}
 
       <p>
       {{ form.caption.label }}
@@ -104,9 +120,16 @@
           Submit
           <i class="mdi-content-send left"></i>
         </button></li>
+        {% if request.path != '/user/image'%}
+          <li><a href="{{ url_for('user.delete_post', id=pid)}}" class="btn-flat red darken-2 white-text waves-effect waves-light" type="submit">
+            Delete
+            <i class="mdi-action-delete left"></i>
+          </a></li>
+        {% endif %}
         </ul>
       </div>
     </form>
+    </div>
 
     </div>
     <div>

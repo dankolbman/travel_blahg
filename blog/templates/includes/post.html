@@ -25,11 +25,14 @@
         <p class="truncate">{{ post.text }}</p>
       {% endif %}
     </div>
-    {% if post.text %}
     <div class="card-action">
+    {% if post.text %}
       <a class="card-title" href="{{ url_for('user.post', id=post.id) }}">Read more</a>
-    </div>
     {% endif %}
+    {% if current_user.is_authenticated and current_user.id == post.author.id %}
+      <a class="btn-flat light-green" href="{{ url_for('user.edit_post', id=post.id) }}">Edit</a>
+    {% endif %}
+    </div>
     {% if post.caption %}
     <div class="card-reveal activator">
       <span class="card-title grey-text text-darken-4">{{ post.title }}<i class="mdi-navigation-close right"></i></span>

@@ -34,7 +34,7 @@ def prox(path):
   path = os.path.join(current_app.config['UPLOAD_FOLDER'], path)
   return send_file(path)
 
-@user.route('/new_text', methods=['GET','POST'])
+@user.route('/text', methods=['GET','POST'])
 @login_required
 def new_text():
   """ Write a new text post page """
@@ -53,9 +53,9 @@ def new_text():
 
     flash("You made a new post!")
     return redirect(url_for('.post', id=textpost.id))
-  return render_template('user/new_text.html', form=form)
+  return render_template('user/text.html', form=form)
 
-@user.route('/new_image', methods=['GET','POST'])
+@user.route('/image', methods=['GET','POST'])
 @login_required
 def new_image():
   """ Make a new image post by uploading a file """
@@ -82,7 +82,46 @@ def new_image():
       db.session.add(imagepost)
       db.session.commit()
       return redirect(url_for('.post', id=imagepost.id))
-  return render_template('user/new_image.html', form=form)
+  return render_template('user/image.html', form=form)
+
+@user.route('/edit/<int:id>', methods=['GET','POST'])
+@login_required
+def edit_post(id):
+  """ Edit a post """
+  p = Post.query.get(id)
+  if p.author_id != current_user.id:
+    return 'This isn\'t your post!!!'
+  else:
+    ### Text post
+    if isinstance(p, TextPost):
+      form = CreatePostForm(title=p.title,
+                            text=p.text,
+                            latitude=p.latitude,
+                            longitude=p.longitude)
+
+      if form.validate_on_submit():
+        p.title=form.title.data
+        p.text=form.text.data
+        p.latitude=form.latitude.data
+        p.longitude=form.longitude.data
+        db.session.commit()
+        return redirect(url_for('.post', id=p.id))
+      return render_template('user/text.html', form=form, pid=p.id)
+    ### Image post
+    if isinstance(p, ImagePost):
+      form = CreateImageForm(title=p.title,
+                            caption=p.caption,
+                            latitude=p.latitude,
+                            longitude=p.longitude)
+
+      if form.validate_on_submit():
+        p.title=form.title.data
+        p.text=form.caption.data
+        p.latitude=form.latitude.data
+        p.longitude=form.longitude.data
+        db.session.commit()
+        return redirect(url_for('.post', id=p.id))
+      return render_template('user/image.html', form=form, pid=p.id)
 
 @user.route('/delete/<int:id>')
 @login_required
@@ -92,7 +131,10 @@ def delete_post(id):
   if p.author_id != current_user.id:
     return 'This isn\'t your post!!!'
   else:
-    return 'Are you sure you want to delete "{0}"?'.format(p.title)
+    flash('"{0}" was deleted'.format(p.title))
+    Post.query.filter_by(id=id).delete()
+    db.session.commit()
+    return redirect(url_for('main.index'))
   
 
 @user.route('/edit_profile', methods=['GET','POST'])
