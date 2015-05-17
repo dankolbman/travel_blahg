@@ -16,6 +16,7 @@ class User(db.Model, UserMixin):
   api_key = db.Column(db.String(64))
 
   submitted = db.relationship('Post', backref='author', lazy='dynamic')
+  pings = db.relationship('Ping', backref='author', lazy='dynamic')
 
   def __init__(self, username, password, email):
     self.username = username
@@ -84,3 +85,11 @@ class ImagePost(Post):
   __mapper_args__ = {'polymorphic_identity': 'image'}
   image_path = db.Column(db.Text)
   caption = db.Column(db.String(512))
+
+class Ping(db.Model):
+  __tablename__ = "ping"
+  id = db.Column(db.Integer, primary_key=True)
+  author_id = db.Column(db.Integer, db.ForeignKey('user.id'), index=True)
+  timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow())
+  latitude = db.Column(db.Float, default=43.165556)
+  longitude = db.Column(db.Float, default=-77.611389)

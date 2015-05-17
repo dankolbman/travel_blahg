@@ -11,7 +11,7 @@ from sqlalchemy import desc
 from blog.extensions import cache
 from blog.models import db
 from blog.forms import CreatePostForm, CreateImageForm, EditProfileForm
-from blog.models import User, Post, TextPost, ImagePost
+from blog.models import User, Post, TextPost, ImagePost, Ping
 
 user = Blueprint('user', __name__)
 
@@ -34,6 +34,12 @@ def prox(path):
   path = os.path.join(current_app.config['UPLOAD_FOLDER'], path)
   return send_file(path)
 
+@user.route('/pings')
+def ping_map():
+  """ Show a map with users pings """
+  pings = Ping.query.filter_by(author_id=current_user.id).order_by(desc(Ping.timestamp)).limit(10).all()
+  return render_template('user/ping_map.html', pings=pings)
+
 @user.route('/text', methods=['GET','POST'])
 @login_required
 def new_text():
@@ -41,14 +47,20 @@ def new_text():
   form = CreatePostForm()
   
   if form.validate_on_submit():
+    t = datetime.utcnow()
     textpost = TextPost(author=current_user._get_current_object(),
               title=form.title.data,
-              timestamp=datetime.utcnow(),
+              timestamp=t,
               text=form.text.data,
               latitude=form.latitude.data,
               longitude=form.longitude.data)
+    ping = Ping(author=current_user._get_current_object(),
+                timestamp=t,
+                latitude=form.latitude.data,
+                longitude=form.longitude.data)
 
     db.session.add(textpost)
+    db.session.add(ping)
     db.session.commit()
 
     flash("You made a new post!")
@@ -71,15 +83,22 @@ def new_image():
       fpath = os.path.join('blog',current_app.config['UPLOAD_FOLDER'], filename)
       f.save(fpath)
 
+      t = datetime.utcnow()
       imagepost = ImagePost(author=current_user._get_current_object(),
                     title=form.title.data,
-                    timestamp=datetime.utcnow(),
+                    timestamp=t,
                     caption=form.caption.data,
                     image_path=filename,
                     latitude=form.latitude.data,
                     longitude=form.longitude.data)
+      ping = Ping(author=current_user._get_current_object(),
+                    timestamp=t,
+                    latitude=form.latitude.data,
+                    longitude=form.longitude.data)
+
 
       db.session.add(imagepost)
+      db.session.add(ping)
       db.session.commit()
       return redirect(url_for('.post', id=imagepost.id))
   return render_template('user/image.html', form=form)

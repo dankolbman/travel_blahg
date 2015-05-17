@@ -48,7 +48,7 @@
     <div class="container">
 
     <span class="card-title">
-    {% if request.path == '/user/new_image'%}
+    {% if request.path == '/user/image'%}
       New Postcard <i class="mdi-image-photo-camera right"></i> 
     {% else %}
       Edit Postcard <i class="mdi-image-photo-camera right"></i>
@@ -68,7 +68,7 @@
       {% endif %}
       {{ form.title(class_="form-control") }}
 
-      {% if request.path == '/user/new_image'%}
+      {% if request.path == '/user/image'%}
         {{ form.image.label }}
         {% if form.image.errors %}
           {% for e in form.image.errors %}

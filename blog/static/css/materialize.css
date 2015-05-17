@@ -2217,7 +2217,7 @@ table {
   table.bordered tr {
     border-bottom: 1px solid #d0d0d0; }
   table.striped tbody tr:nth-child(odd) {
-    background-color: #f2f2f2; }
+    background-color: #0a6ebd; }
   table.hoverable tbody tr {
     -webkit-transition: background-color 0.25s ease;
     -moz-transition: background-color 0.25s ease;
@@ -2225,7 +2225,7 @@ table {
     -ms-transition: background-color 0.25s ease;
     transition: background-color 0.25s ease; }
     table.hoverable tbody tr:hover {
-      background-color: #f2f2f2; }
+      background-color: #0a6ebd; }
   table.centered thead tr th, table.centered tbody tr td {
     text-align: center; }
 
