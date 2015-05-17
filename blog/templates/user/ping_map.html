@@ -25,13 +25,15 @@
 
   <div class="card">
     <div class="card-content">
-      <span class="card-title">Latest pings</span>
+      <span class="card-title">Latest pings<i class="mdi-maps-my-location right"></i></span>
+      <div class="divider"></div>
 
       <div class="row">
         <div class="col s12">
-          <table class="hoverable responsive-table centered white-text">
+          <table class="hoverable centered white-text">
           <thead>
           <tr>
+              <th data-field="icn"></th>
               <th data-field="time">Time</th>
               <th data-field="lat">Latitude</th>
               <th data-field="log">Longitude</th>
@@ -40,7 +42,8 @@
           <tbody>
           {% for ping in pings %}
           <tr>
-            <td>{{ ping.timestamp.strftime('%y/%m/%d %H:%M') }}</td>
+            <td><i class="right mdi-maps-pin-drop"></i></td>
+            <td>{{ ping.timestamp.strftime('%H:%M %y/%m/%d') }}</td>
             <td>{{ ping.latitude }}</td>
             <td>{{ ping.longitude }}</td>
           </tr>

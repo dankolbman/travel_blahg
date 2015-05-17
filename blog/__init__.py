@@ -3,6 +3,7 @@ from flask import Flask
 from blog.models import db
 from blog.views.main import main
 from blog.views.user import user
+from blog.views.api import api
 
 from blog.extensions import cache, debug_toolbar, login_manager
 
@@ -33,6 +34,7 @@ def create_app(config, env="prod"):
     # register our blueprints
     app.register_blueprint(main)
     app.register_blueprint(user, url_prefix='/user')
+    app.register_blueprint(api, url_prefix='/api')
 
     return app
 
