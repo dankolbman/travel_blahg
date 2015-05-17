@@ -1,4 +1,5 @@
 class Config(object):
+  APP_NAME = 'Travel Blahg'
   SECRET_KEY = 'G00DB33F'
   ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif'])
 
