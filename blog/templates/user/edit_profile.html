@@ -7,7 +7,9 @@
     <div class="card-content white-text">
     <div class="container">
 
-    <span class="card-title">{{ current_user.username }}'s Profile</span>
+    <span class="card-title">{{ current_user.username }}'s Profile<i class="mdi-social-person-outline right"></i></span>
+    <div class="divider"></div>
+    <div class="section">
 
     <form role="form" action="{{ url_for('.edit_profile') }}" method="post">
       {{ form.hidden_tag() }}
@@ -56,6 +58,7 @@
         <button class="btn-flat white-text waves-effect waves-light" type="submit">Apply</button>
       </div>
     </form>
+    </div>
 
     </div>
     <div>
