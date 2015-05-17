@@ -1,6 +1,7 @@
 from flask_wtf import Form
 from wtforms import TextField, TextAreaField, FloatField, PasswordField, FileField
 from wtforms import validators
+from wtforms import ValidationError
 
 from .models import User
 
@@ -22,6 +23,31 @@ class LoginForm(Form):
     elif not user.check_password(self.password.data):
       self.username.errors.append('Invalid username or password')
       return False
+    return True
+
+class NewUserForm(Form):
+  username = TextField(u'Username')
+  email = TextField(u'Email', validators=[validators.email()])
+  password = PasswordField(u'Password', validators=\
+            [validators.EqualTo('password2', message='Passwords must match.'),\
+            validators.length(6,64)])
+  password2 = PasswordField(u'Password Verify')
+
+  def validate_username(self, field):
+    if User.query.filter_by(username=field.data).first():
+      raise ValidationError('Username not available')
+
+  def validate_email(self, field):
+    if User.query.filter_by(email=field.data).first():
+      raise ValidationError('Email address not available')
+
+  def validate(self):
+    check_validate = super(NewUserForm, self).validate()
+
+    # Make sure the input was clean
+    if not check_validate:
+      return False
+
     return True
 
 class EditProfileForm(Form):

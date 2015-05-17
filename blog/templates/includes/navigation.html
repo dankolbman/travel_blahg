@@ -24,12 +24,14 @@
           <i class="mdi-navigation-arrow-drop-down right"></i>
         </a></li>
       {% else %}
+        <li class="green lighten-1"><a href="{{ url_for('main.new_user') }}">Sign Up!</a></li>
         <li><a href="{{ url_for('main.login') }}">Login</a></li>
       {% endif %}
     </ul>
 
     <ul class="side-nav" id="mobile">
       {% if not current_user.is_authenticated() %}
+        <li class="lighten-1"><a href="{{ url_for('main.new_user') }}">Sign Up!</a></li>
         <li><a href="{{ url_for('main.login') }}">Login</a></li>
       {% else %}
         <li><a href="{{ url_for('user.ping_map')}}"><i class="mdi-maps-my-location left"></i>My Pings</a></li>
