@@ -55,6 +55,17 @@
   </div>
   {% endblock %}
 
+  {% block footer %}
+    <footer class="page-footer">
+      <div class="footer-copyright">
+        <div class="container">
+          Made by Dan Kolbman
+          <a class="grey-text text-lighten-4 right" href="https://github.com/dankolbman/travel_blahg">Get the source code</a>
+        </div>
+      </div>
+    </footer>
+  {% endblock %}
+
   {% block alerts %}
     {% for message in get_flashed_messages() %}
       <script type="text/javascript">

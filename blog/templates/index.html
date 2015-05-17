@@ -40,8 +40,10 @@
   {% endif %}
 
   {% if pagination %}
+    <div class="section">
     <div class="container">
       {{ macros.pager(pagination, '.index') }}
+    </div>
     </div>
   {% endif %}
 

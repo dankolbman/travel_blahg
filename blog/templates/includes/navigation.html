@@ -15,8 +15,9 @@
           <li><a href="{{ url_for('main.logout') }}">Logout</a></li>
         </ul>
 
-        <li><a href="{{ url_for('user.new_image') }}"><i class="mdi-image-camera-alt left"></i>New Postcard</a></li>
-        <li><a href="{{ url_for('user.new_text') }}"><i class="mdi-editor-mode-edit left"></i>New Post</a></li>
+        <li><a href="{{ url_for('user.ping_map')}}"><i class="mdi-maps-my-location"></i></a></li>
+        <li><a href="{{ url_for('user.new_image') }}"><i class="mdi-image-camera-alt"></i></a></li>
+        <li><a href="{{ url_for('user.new_text') }}"><i class="mdi-editor-mode-edit"></i></a></li>
         <li><a class="dropdown-button" href="#!" data-activates="nav-dropdown">
           <i class="mdi-action-perm-identity left"></i>
           {{current_user.username}}
@@ -31,6 +32,7 @@
       {% if not current_user.is_authenticated() %}
         <li><a href="{{ url_for('main.login') }}">Login</a></li>
       {% else %}
+        <li><a href="{{ url_for('user.ping_map')}}"><i class="mdi-maps-my-location left"></i>My Pings</a></li>
         <li><a href="{{ url_for('user.new_text') }}"><i class="mdi-editor-mode-edit left"></i>New Post</a></li>
         <li><a href="{{ url_for('user.new_image') }}"><i class="mdi-image-camera-alt left"></i>New Postcard</a></li>
         <li><a href="{{ url_for('user.home') }}">View Profile</a></li>
