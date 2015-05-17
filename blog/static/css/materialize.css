@@ -5695,7 +5695,7 @@ button.btn-floating {
   opacity: 0;
   position: absolute;
   white-space: nowrap;
-  z-index: 1;
+  z-index: 1000;
   will-change: width, height; }
   .dropdown-content li {
     clear: both;
@@ -5709,7 +5709,7 @@ button.btn-floating {
       background-color: #eee; }
     .dropdown-content li > a, .dropdown-content li > span {
       font-size: 1.2rem;
-      color: #E3F2FD;
+      color: #2196F3;
       display: block;
       padding: 1rem 1rem; }
 

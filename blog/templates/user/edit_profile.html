@@ -22,6 +22,7 @@
       {% endif %}
       {{ form.username(class="form-control", readonly=True, disabled=True) }}
 
+      <p>
       {{ form.email.label }}
       {% if form.email.errors %}
         {% for e in form.email.errors %}
@@ -29,6 +30,7 @@
         {% endfor %}
       {% endif %}
       {{ form.email(class_="form-control") }}
+      </p>
 
       {{ form.password.label }}
       {% if form.password.errors %}
