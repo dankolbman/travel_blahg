@@ -5,7 +5,9 @@ class Config(object):
 
 
 class ProdConfig(Config):
-  SQLALCHEMY_DATABASE_URI = 'sqlite:///../database.db'
+  #SQLALCHEMY_DATABASE_URI = 'sqlite:///../database.db'
+  SQLALCHEMY_DATABASE_URI = "postgresql://localhost/blog"
+
   UPLOAD_FOLDER = 'uploads'
 
   CACHE_TYPE = 'simple'
@@ -15,7 +17,8 @@ class DevConfig(Config):
   DEBUG_TB_INTERCEPT_REDIRECTS = False
   UPLOAD_FOLDER = 'dev_uploads'
 
-  SQLALCHEMY_DATABASE_URI = 'sqlite:///../dev_database.db'
+  #SQLALCHEMY_DATABASE_URI = 'sqlite:///../dev_database.db'
+  SQLALCHEMY_DATABASE_URI = "postgresql://localhost/blog_dev"
 
   CACHE_TYPE = 'null'
 
@@ -26,7 +29,7 @@ class TestConfig(Config):
 
   import tempfile
   db_file = tempfile.NamedTemporaryFile()
-  SQLALCHEMY_DATABASE_URI = 'sqlite:///' + db_file.name
+  SQLALCHEMY_DATABASE_URI = 'postgresql:///' + db_file.name
   SQLALCHEMY_ECHO = True
 
   CACHE_TYPE = 'null'
