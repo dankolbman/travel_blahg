@@ -5,12 +5,13 @@ from blog.extensions import cache
 from blog.models import db
 from blog.forms import LoginForm, NewUserForm
 from blog.models import User, Post
+from geoalchemy2 import Geometry
 
 import os
 main = Blueprint('main', __name__)
 
 @main.route('/')
-@cache.cached(timeout=60)
+#@cache.cached(timeout=60)
 def index():
   """ Home page """
   # Show recent posts and paginate

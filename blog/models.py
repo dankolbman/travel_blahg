@@ -4,6 +4,7 @@ from datetime import datetime
 from flask.ext.sqlalchemy import SQLAlchemy
 from flask.ext.login import UserMixin, AnonymousUserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
+from geoalchemy2 import Geometry
 
 db = SQLAlchemy()
 
@@ -61,6 +62,7 @@ class Post(db.Model):
   post_type = db.Column(db.String(32), nullable=False)
   title = db.Column(db.String(256), nullable=False)
   timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow(), nullable=False)
+  loc = db.Column(Geometry('POINT'), nullable=False)
   latitude = db.Column(db.Float, default=43.165556, nullable=False)
   longitude = db.Column(db.Float, default=-77.611389, nullable=False)
   author_id = db.Column(db.Integer, db.ForeignKey('user.id'), index=True, nullable=False)
@@ -70,7 +72,7 @@ class Post(db.Model):
     return self.id
 
   def get_location(self):
-    return self.latitude, self.longitude
+    return self.loc
 
   def __repr__(self):
     return '<Post {0}>'.format(self.title)
@@ -91,5 +93,4 @@ class Ping(db.Model):
   id = db.Column(db.Integer, primary_key=True)
   author_id = db.Column(db.Integer, db.ForeignKey('user.id'), index=True)
   timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow())
-  latitude = db.Column(db.Float, default=43.165556)
-  longitude = db.Column(db.Float, default=-77.611389)
+  loc = db.Column(Geometry('POINT'))

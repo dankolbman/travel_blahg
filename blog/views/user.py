@@ -7,6 +7,7 @@ from flask.ext.login import login_required, current_user
 from werkzeug import secure_filename 
 
 from sqlalchemy import desc
+from geoalchemy2 import Geometry
 
 from blog.extensions import cache
 from blog.models import db
@@ -53,11 +54,11 @@ def new_text():
               timestamp=t,
               text=form.text.data,
               latitude=form.latitude.data,
-              longitude=form.longitude.data)
+              longitude=form.longitude.data,
+              loc='POINT({0} {1})'.format(form.longitude.data,form.latitude.data))
     ping = Ping(author=current_user._get_current_object(),
                 timestamp=t,
-                latitude=form.latitude.data,
-                longitude=form.longitude.data)
+                loc='POINT({0} {1})'.format(form.longitude.data,form.latitude.data))
 
     db.session.add(textpost)
     db.session.add(ping)
@@ -90,11 +91,11 @@ def new_image():
                     caption=form.caption.data,
                     image_path=filename,
                     latitude=form.latitude.data,
-                    longitude=form.longitude.data)
+                    longitude=form.longitude.data,
+                    loc='POINT({0} {1})'.format(form.longitude.data,form.latitude.data))
       ping = Ping(author=current_user._get_current_object(),
                     timestamp=t,
-                    latitude=form.latitude.data,
-                    longitude=form.longitude.data)
+                    loc='POINT({0} {1})'.format(form.longitude.data,form.latitude.data))
 
 
       db.session.add(imagepost)
@@ -138,6 +139,7 @@ def edit_post(id):
         p.text=form.caption.data
         p.latitude=form.latitude.data
         p.longitude=form.longitude.data
+        p.loc = 'POINT({0} {1})'.format(form.longitude.data,form.latitude.data)
         db.session.commit()
         return redirect(url_for('.post', id=p.id))
       return render_template('user/image.html', form=form, pid=p.id)
@@ -175,6 +177,10 @@ def edit_profile():
 @user.route('/post/<int:id>', methods=['GET', 'POST'])
 def post(id):
   p = Post.query.get_or_404(id)
+  #print(wkb.loads(p.loc))
+  geo_json = str( db.session.scalar(p.loc.ST_AsGeoJSON()) )
+  print(geo_json)
+  print(to_shape(p.loc).x)
   return render_template('post.html', post=p)
 
 def allowed_file(filename):
