@@ -65,6 +65,7 @@ class Post(db.Model):
   loc = db.Column(Geometry('POINT'), nullable=False)
   latitude = db.Column(db.Float, default=43.165556, nullable=False)
   longitude = db.Column(db.Float, default=-77.611389, nullable=False)
+  private = db.Column(db.Boolean, default=False, nullable=False)
   author_id = db.Column(db.Integer, db.ForeignKey('user.id'), index=True, nullable=False)
   __mapper_args__ = {'polymorphic_on': post_type }
 
