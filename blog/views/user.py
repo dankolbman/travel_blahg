@@ -38,8 +38,18 @@ def prox(path):
 @user.route('/pings')
 def ping_map():
   """ Show a map with users pings """
+  import json
   pings = Ping.query.filter_by(author_id=current_user.id).order_by(desc(Ping.timestamp)).limit(10).all()
-  return render_template('user/ping_map.html', pings=pings)
+
+  geo_json = []
+  for ping in pings:
+    geom = json.loads(db.session.scalar(ping.loc.ST_AsGeoJSON()))
+    geo_json.append({"type":"Feature",'geometry':geom})
+
+  geo_json = json.dumps(geo_json)
+
+  return render_template('user/ping_map.html', pings = pings, geo_json=geo_json)
+
 
 @user.route('/text', methods=['GET','POST'])
 @login_required
@@ -177,10 +187,6 @@ def edit_profile():
 @user.route('/post/<int:id>', methods=['GET', 'POST'])
 def post(id):
   p = Post.query.get_or_404(id)
-  #print(wkb.loads(p.loc))
-  geo_json = str( db.session.scalar(p.loc.ST_AsGeoJSON()) )
-  print(geo_json)
-  print(to_shape(p.loc).x)
   return render_template('post.html', post=p)
 
 def allowed_file(filename):

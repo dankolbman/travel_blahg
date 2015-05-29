@@ -35,8 +35,6 @@
           <tr>
               <th data-field="icn"></th>
               <th data-field="time">Time</th>
-              <th data-field="lat">Latitude</th>
-              <th data-field="log">Longitude</th>
           </tr>
           </thead>
           <tbody>
@@ -44,8 +42,6 @@
           <tr>
             <td><i class="right mdi-maps-pin-drop"></i></td>
             <td>{{ ping.timestamp.strftime('%H:%M %y/%m/%d') }}</td>
-            <td>{{ ping.latitude }}</td>
-            <td>{{ ping.longitude }}</td>
           </tr>
           {% endfor %}
           </tbody>
@@ -61,22 +57,23 @@
 {% block map %}
 <script>
 L.mapbox.accessToken = 'pk.eyJ1IjoiZGFuazUyOCIsImEiOiJzOVp0TzJnIn0.1c8obLmcPHN4LosoNan8DQ';
-var map = L.mapbox.map('map', 'mapbox.streets');
 
-var featureLayer = L.mapbox.featureLayer()
+var geojsonMarkerOptions = {
+    radius: 3,
+    fillColor: "#ff4444",
+    color: "#000",
+    weight: 1,
+    opacity: 0.0,
+    fillOpacity: 0.7
+};
 
-markers = [
-{% for ping in pings %}
-L.circleMarker([{{ping.latitude}}, {{ping.longitude}}], {
-  'radius': 5,
-  'fillOpacity': 0.9,
-  'color': '#FF4444'
-}),
-{% endfor %}
-];
+var map = L.mapbox.map('map', 'mapbox.streets')
 
-var group = L.featureGroup(markers).addTo(map);
-map.fitBounds(group.getBounds());
+L.geoJson({{ geo_json | safe }}, {
+  pointToLayer: function (feature, latlng) {
+      return L.circleMarker(latlng, geojsonMarkerOptions);
+  }
+}).addTo(map);
 
 </script>
 {% endblock %}
