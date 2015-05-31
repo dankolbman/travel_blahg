@@ -15,17 +15,31 @@ def api_home():
 
 @api.route('/<string:username>/<string:api_key>/ping', methods=['GET', 'POST'])
 def ping(username, api_key):
-  print(request.json)
-  return str(request.json)
+  data = request.get_json()
 
-@api.route('/<string:username>/<string:api_key>/ping/<float:lat>/<float:log>', methods=['GET', 'POST'])
-def ping_loc(username, api_key, lat, log):
   user = User.query.filter_by(username=username).first_or_404()
   if user.api_key == api_key:
-    p = Ping(author=user, timestamp=datetime.utcnow(), latitude=lat, longitude=log)
-    db.session.add(p)
-    db.session.commit()
-    return 'success'
+    ts = data['timestamp']/1000
+    ts = datetime.utcfromtimestamp(ts)
+    # Check if this point has already been reported
+    if not Ping.query.filter_by(author=user).filter_by(timestamp=ts).first():
+      ping = Ping(author=user, timestamp=ts,
+  	    loc='POINT({0} {1})'.format(data['longitude'],data['latitude']))
+      db.session.add(ping)
+      db.session.commit()
+      print("New ping")
+      return "Success"
+    else:
+      print("Duplicate ping")
+      return "Duplicate point"
   else:
-    return 'invalid key'
+    return "Bad AUTH"
+
+@api.route('/<string:username>/<string:api_key>', methods=['GET', 'POST'])
+def test(username, api_key):
+  user = User.query.filter_by(username=username).first_or_404()
+  if user.api_key == api_key:
+    return "Good AUTH"
+  else:
+    return "Bad AUTH"
 
