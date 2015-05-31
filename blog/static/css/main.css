@@ -9,7 +9,11 @@ main {
 }
 
 #map {
-  height: 300px;
+  height: 400px;
+}
+
+#pings {
+ height: 600px;
 }
 
 #static-map {

@@ -18,36 +18,16 @@
 
 {% block body %}
 
-  <div id="map" class="card">
+  <div id="pings" class="card">
     <div class="card-content">
     </div>
   </div>
 
   <div class="card">
-    <div class="card-content">
-      <span class="card-title">Latest pings<i class="mdi-maps-my-location right"></i></span>
+    <div class="card-content white-text">
+      <span class="card-title">Latest Ping Locations<i class="mdi-maps-my-location right"></i></span>
       <div class="divider"></div>
-
-      <div class="row">
-        <div class="col s12">
-          <table class="hoverable centered white-text">
-          <thead>
-          <tr>
-              <th data-field="icn"></th>
-              <th data-field="time">Time</th>
-          </tr>
-          </thead>
-          <tbody>
-          {% for ping in pings %}
-          <tr>
-            <td><i class="right mdi-maps-pin-drop"></i></td>
-            <td>{{ ping.timestamp.strftime('%H:%M %y/%m/%d') }}</td>
-          </tr>
-          {% endfor %}
-          </tbody>
-          </table>
-        </div>
-      </div>
+      Last Ping: {{ last.strftime('%H:%M %m/%d/%y UTC') }}
     </div>
   </div>
 
@@ -67,7 +47,7 @@ var geojsonMarkerOptions = {
     fillOpacity: 0.7
 };
 
-var map = L.mapbox.map('map', 'mapbox.streets')
+var map = L.mapbox.map('pings', 'mapbox.streets').setView([15.0, 104], 5);
 
 L.geoJson({{ geo_json | safe }}, {
   pointToLayer: function (feature, latlng) {

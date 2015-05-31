@@ -79,8 +79,9 @@ L.marker([{{post.latitude}}, {{post.longitude}}], {
 {% endfor %}
 ];
 
-var group = L.featureGroup(markers).addTo(map);
-map.fitBounds(group.getBounds());
+//var group = L.featureGroup(markers).addTo(map);
+//map.fitBounds(group.getBounds());
+map.setView([16.0, 104], 5);
 
 </script>
 {% endblock %}
