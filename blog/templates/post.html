@@ -4,8 +4,7 @@
 
 {% block body %}
 
-  <div id="map" class="card">
-    <img id="static-map" src="">
+  <div id="static-map" class="card">
   </div>
 
   <div class="card">
@@ -26,7 +25,6 @@
     {% elif post.caption %}
       <p>{{ post.caption }}</p>
     {% endif %}
-
     </div>
     </div>
   </div>
@@ -70,13 +68,15 @@
     var vp = geoViewport.viewport(bounds, size);
     var pins = [];
     pins.push('pin-l+2196F3(' + place.features[0].geometry.coordinates.join(',') + ')');
-    
-    document.getElementById('static-map').src =
-        'https://api.tiles.mapbox.com/v4/mapbox.streets/' +
-        pins.join(',') + '/' +
-        vp.center.join(',') + ',' +
-        vp.zoom + '/' +
-        size.join('x') + '.png' +
-        '?access_token=' + L.mapbox.accessToken;
+
+//url("https://api.tiles.mapbox.com/v4/mapbox.streets/pin-l+2196F3(-74.954611,40.2611473)/-74.954611,40.2611473,10/750x300.png?access_token=pk.eyJ1IjoiZGFuazUyOCIsImEiOiJzOVp0TzJnIn0.1c8obLmcPHN4LosoNan8DQ") scroll center transparent
+   
+    $("#static-map").css("background", "url('" +
+        "https://api.tiles.mapbox.com/v4/mapbox.streets/" +
+        pins.join(',') + "/" +
+        vp.center.join(',') + "," +
+        vp.zoom + "/" +
+        size.join('x') + ".png" +
+        "?access_token=" + L.mapbox.accessToken + "') scroll center");
   </script>
 {% endblock %}
