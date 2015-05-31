@@ -1,4 +1,5 @@
 from flask import Flask
+from flaskext.markdown import Markdown
 
 from blog.models import db
 from blog.views.main import main
@@ -22,6 +23,9 @@ def create_app(config, env="prod"):
 
     # Flask cache init
     cache.init_app(app)
+
+    # Markdown
+    md = Markdown(app)
 
     # initialize the debug tool bar
     debug_toolbar.init_app(app)

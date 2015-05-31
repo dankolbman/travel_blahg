@@ -22,7 +22,7 @@
       {{ post.timestamp.strftime('%B %d, %Y -  %I:%M %p') }}
     </div>
     {% if post.text %}
-      <p>{{ post.text }}</p>
+      {{ post.text | markdown }}
     {% elif post.caption %}
       <p>{{ post.caption }}</p>
     {% endif %}
