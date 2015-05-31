@@ -23,7 +23,7 @@ def ping(username, api_key):
     ts = datetime.utcfromtimestamp(ts)
     # Check if this point has already been reported
     if not Ping.query.filter_by(author=user).filter_by(timestamp=ts).first():
-      ping = Ping(author=user, timestamp=ts,
+      ping = Ping(author=user, timestamp=ts,accuracy=data['accuracy'],
   	    loc='POINT({0} {1})'.format(data['longitude'],data['latitude']))
       db.session.add(ping)
       db.session.commit()

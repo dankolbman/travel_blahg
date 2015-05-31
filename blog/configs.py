@@ -6,7 +6,7 @@ class Config(object):
 
 class ProdConfig(Config):
   #SQLALCHEMY_DATABASE_URI = 'sqlite:///../database.db'
-  SQLALCHEMY_DATABASE_URI = "postgresql://localhost/blog"
+  SQLALCHEMY_DATABASE_URI = "postgresql:///blog"
 
   UPLOAD_FOLDER = 'uploads'
 
@@ -18,7 +18,7 @@ class DevConfig(Config):
   UPLOAD_FOLDER = 'dev_uploads'
 
   #SQLALCHEMY_DATABASE_URI = 'sqlite:///../dev_database.db'
-  SQLALCHEMY_DATABASE_URI = "postgresql://localhost/blog_dev"
+  SQLALCHEMY_DATABASE_URI = "postgresql:///blog_dev"
 
   CACHE_TYPE = 'null'
 

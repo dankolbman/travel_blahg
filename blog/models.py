@@ -94,4 +94,5 @@ class Ping(db.Model):
   id = db.Column(db.Integer, primary_key=True)
   author_id = db.Column(db.Integer, db.ForeignKey('user.id'), index=True)
   timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow())
+  accuracy = db.Column(db.Float, default=100.0, nullable=False)
   loc = db.Column(Geometry('POINT'))

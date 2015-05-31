@@ -39,16 +39,17 @@ def prox(path):
 def ping_map():
   """ Show a map with users pings """
   import json
-  pings = Ping.query.filter_by(author_id=current_user.id).order_by(desc(Ping.timestamp)).limit(10).all()
+  pings = Ping.query.filter_by(author_id=current_user.id).order_by(desc(Ping.timestamp)).limit(1000).all()
 
   geo_json = []
   for ping in pings:
     geom = json.loads(db.session.scalar(ping.loc.ST_AsGeoJSON()))
     geo_json.append({"type":"Feature",'geometry':geom})
 
+  last_up = pings[-1].timestamp
   geo_json = json.dumps(geo_json)
 
-  return render_template('user/ping_map.html', pings = pings, geo_json=geo_json)
+  return render_template('user/ping_map.html', geo_json=geo_json,last=last_up)
 
 
 @user.route('/text', methods=['GET','POST'])
@@ -66,12 +67,8 @@ def new_text():
               latitude=form.latitude.data,
               longitude=form.longitude.data,
               loc='POINT({0} {1})'.format(form.longitude.data,form.latitude.data))
-    ping = Ping(author=current_user._get_current_object(),
-                timestamp=t,
-                loc='POINT({0} {1})'.format(form.longitude.data,form.latitude.data))
 
     db.session.add(textpost)
-    db.session.add(ping)
     db.session.commit()
 
     flash("You made a new post!")
@@ -103,13 +100,9 @@ def new_image():
                     latitude=form.latitude.data,
                     longitude=form.longitude.data,
                     loc='POINT({0} {1})'.format(form.longitude.data,form.latitude.data))
-      ping = Ping(author=current_user._get_current_object(),
-                    timestamp=t,
-                    loc='POINT({0} {1})'.format(form.longitude.data,form.latitude.data))
 
 
       db.session.add(imagepost)
-      db.session.add(ping)
       db.session.commit()
       return redirect(url_for('.post', id=imagepost.id))
   return render_template('user/image.html', form=form)
