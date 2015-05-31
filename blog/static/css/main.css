@@ -24,3 +24,8 @@ main {
 .leaflet-bottom, .leaflet-top {
   z-index: 1;
 }
+
+.subtitle {
+  font-size: 1.0rem;
+  padding-left: 10px;
+}

@@ -3,10 +3,14 @@
   <div class="nav-wrapper">
   <div class="container">
 
-    <a class="brand-logo"  href="{{ url_for('main.index') }}"><i class="large mdi-social-public left"></i>{{config['APP_NAME']}}</a>
+    <a class="brand-logo"  href="{{ url_for('main.index') }}">
+      {{config['APP_NAME']}}<span class="right hide-on-med-and-down subtitle">Dan Kolbman</span>
+      </a>
 
     <a href="#" data-activates="mobile" class="button-collapse right"><i class="mdi-navigation-menu"></i></a>
     <ul class="right hide-on-med-and-down">
+      <li><a href="http://travel.benbrittain.com">Ben's Blogue<i class="mdi-action-book left"></i></a></li>
+      <li><a href="{{ url_for('user.ping_map_user',username='dan')}}">Dan Trakr<i class="mdi-maps-my-location left"></i></a></li>
       {% if current_user.is_authenticated() %}
         <ul id="nav-dropdown" class="dropdown-content">
           <li><a href="{{ url_for('user.home') }}">View Profile</a></li>
@@ -14,8 +18,6 @@
           <li class="divider"></li>
           <li><a href="{{ url_for('main.logout') }}">Logout</a></li>
         </ul>
-
-        <li><a href="{{ url_for('user.ping_map')}}"><i class="mdi-maps-my-location"></i></a></li>
         <li><a href="{{ url_for('user.new_image') }}"><i class="mdi-image-camera-alt"></i></a></li>
         <li><a href="{{ url_for('user.new_text') }}"><i class="mdi-editor-mode-edit"></i></a></li>
         <li><a class="dropdown-button" href="#!" data-activates="nav-dropdown">
@@ -24,17 +26,16 @@
           <i class="mdi-navigation-arrow-drop-down right"></i>
         </a></li>
       {% else %}
-        <li class="green lighten-1"><a href="{{ url_for('main.new_user') }}">Sign Up!</a></li>
         <li><a href="{{ url_for('main.login') }}">Login</a></li>
       {% endif %}
     </ul>
 
     <ul class="side-nav" id="mobile">
+      <li><a href="{{ url_for('user.ping_map_user',username='dan')}}"><i class="mdi-maps-my-location left"></i>Dan Trakr</a></li>
       {% if not current_user.is_authenticated() %}
         <li class="lighten-1"><a href="{{ url_for('main.new_user') }}">Sign Up!</a></li>
         <li><a href="{{ url_for('main.login') }}">Login</a></li>
       {% else %}
-        <li><a href="{{ url_for('user.ping_map')}}"><i class="mdi-maps-my-location left"></i>My Pings</a></li>
         <li><a href="{{ url_for('user.new_text') }}"><i class="mdi-editor-mode-edit left"></i>New Post</a></li>
         <li><a href="{{ url_for('user.new_image') }}"><i class="mdi-image-camera-alt left"></i>New Postcard</a></li>
         <li><a href="{{ url_for('user.home') }}">View Profile</a></li>
