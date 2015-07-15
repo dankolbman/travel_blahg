@@ -28,4 +28,7 @@ main {
 .subtitle {
   font-size: 1.0rem;
   padding-left: 10px;
+  width: 10rem;
+  line-height: 1rem;
+  padding-top: 18px;
 }

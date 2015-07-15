@@ -10,6 +10,7 @@ from blog.models import db, User
 env = os.environ.get('BLOG_ENV', 'dev')
 # Load the settings
 app = create_app('blog.configs.{0}Config'.format( env.capitalize()), env=env)
+print('Using config {0}'.format(env))
 
 manager = Manager(app)
 manager.add_command("server", Server())
