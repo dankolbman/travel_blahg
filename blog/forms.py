@@ -31,7 +31,7 @@ class NewUserForm(Form):
   password = PasswordField(u'Password', validators=\
             [validators.EqualTo('password2', message='Passwords must match.'),\
             validators.length(6,64)])
-  password2 = PasswordField(u'Password Verify')
+  password2 = PasswordField(u'Verify Password')
 
   def validate_username(self, field):
     if User.query.filter_by(username=field.data).first():

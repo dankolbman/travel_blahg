@@ -5,13 +5,11 @@
 
     <a class="brand-logo"  href="{{ url_for('main.index') }}">
       <i class="large mdi-social-public left"></i>
-      {{config['APP_NAME']}}<span class="right hide-on-med-and-down subtitle">Dan Kolbman Summer 2015</span>
+      {{config['APP_NAME']}}
       </a>
 
     <a href="#" data-activates="mobile" class="button-collapse right"><i class="mdi-navigation-menu"></i></a>
     <ul class="right hide-on-med-and-down">
-      <li><a href="http://travel.benbrittain.com">Ben's Blogue<i class="mdi-action-book left"></i></a></li>
-      <li><a href="{{ url_for('user.ping_map_user',username='dan')}}">Dan Trakr<i class="mdi-maps-my-location left"></i></a></li>
       {% if current_user.is_authenticated() %}
         <ul id="nav-dropdown" class="dropdown-content">
           <li><a href="{{ url_for('user.home') }}">View Profile</a></li>
@@ -27,12 +25,12 @@
           <i class="mdi-navigation-arrow-drop-down right"></i>
         </a></li>
       {% else %}
+        <li><a href="{{ url_for('main.new_user') }}">Sign Up!</a></li>
         <li><a href="{{ url_for('main.login') }}">Login</a></li>
       {% endif %}
     </ul>
 
     <ul class="side-nav" id="mobile">
-      <li><a href="{{ url_for('user.ping_map_user',username='dan')}}"><i class="mdi-maps-my-location left"></i>Dan Trakr</a></li>
       {% if not current_user.is_authenticated() %}
         <li class="lighten-1"><a href="{{ url_for('main.new_user') }}">Sign Up!</a></li>
         <li><a href="{{ url_for('main.login') }}">Login</a></li>
@@ -45,7 +43,6 @@
         <li><a href="{{ url_for('main.logout') }}">Logout</a></li>
       {% endif %}
     </ul>
-
 
   </div>
   </div>

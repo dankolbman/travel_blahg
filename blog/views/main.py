@@ -49,7 +49,7 @@ def login():
       user = User.query.filter_by(username=form.username.data).one()
       login_user(user)
 
-      flash("You've been logged in.", "success")
+      flash("You've been logged in", "success")
       return redirect(url_for(".index"))
 
   return render_template("login.html", form=form)
