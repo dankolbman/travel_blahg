@@ -10,7 +10,7 @@ class Config(object):
 
 class ProdConfig(Config):
   DEBUG = False
-  TEST = False
+  TESTING = False
   SQLALCHEMY_DATABASE_URI = "postgresql:///blog"
 
   UPLOAD_FOLDER = 'uploads'
@@ -19,7 +19,7 @@ class ProdConfig(Config):
 class DevConfig(Config):
   DEBUG = True
   DEBUG_TB_INTERCEPT_REDIRECTS = False
-  TEST = False
+  TESTING = False
   UPLOAD_FOLDER = 'dev_uploads'
 
   #SQLALCHEMY_DATABASE_URI = 'sqlite:///../dev_database.db'
@@ -30,7 +30,7 @@ class DevConfig(Config):
 class TestConfig(Config):
   DEBUG = False
   DEBUG_TB_INTERCEPT_REDIRECTS = False
-  TEST = True
+  TESTING = True
   UPLOAD_FOLDER = 'test_uploads'
 
   import tempfile

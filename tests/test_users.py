@@ -44,7 +44,7 @@ class TestCase(unittest.TestCase):
     
 
   def test_user(self):
-    """ User testing
+    """ User creation and authentication
     Create new user
     Add to database
     Login and out"""
