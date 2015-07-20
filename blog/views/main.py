@@ -19,8 +19,9 @@ def index():
   pagination = Post.query.order_by(Post.timestamp.desc()).paginate(
     page, per_page=10, error_out=False)
   posts = pagination.items
+  all_posts = Post.query.all()
 
-  return render_template('index.html', posts=posts, pagination=pagination)
+  return render_template('index.html', posts=posts, all_posts=all_posts, pagination=pagination)
 
 @main.route('/register', methods=["GET", "POST"])
 @cache.cached(timeout=300)

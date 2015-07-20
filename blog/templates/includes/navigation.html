@@ -5,7 +5,13 @@
 
     <a class="brand-logo"  href="{{ url_for('main.index') }}">
       <i class="large mdi-social-public left"></i>
+      {% if user %}
+      {{ user.username.capitalize() }}'s Travel Blog
+      {% elif current_user %}
+      {{ current_user.username.capitalize() }}'s Travel Blog
+      {% else %}
       {{config['APP_NAME']}}
+      {% endif %}
       </a>
 
     <a href="#" data-activates="mobile" class="button-collapse right"><i class="mdi-navigation-menu"></i></a>

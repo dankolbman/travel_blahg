@@ -1,7 +1,13 @@
 {% extends "base.html" %}
 {% import "includes/pagination.html" as macros %}
 
-{% block title %}{{config['APP_NAME']}}{% endblock %}
+{% block title %}
+{% if user %}
+{{ user.username.capitalize() }}'s Travel Blog
+{% else %}
+{{config['APP_NAME']}}
+{% endif %}
+{% endblock %}
 
 {% block scripts %}
 
@@ -24,7 +30,7 @@
     </div>
   </div>
   {% if user %}
-    <h1 class="center-align">{{ user.username }}'s latest posts</h1>
+    <h1 class="center-align">{{ user.username.capitalize() }}'s latest posts</h1>
   {% else %}
     <h1 class="center-align">Latest posts</h1>
   {% endif %}
@@ -59,11 +65,11 @@ var map = L.mapbox.map('map', 'mapbox.streets');
 var featureLayer = L.mapbox.featureLayer()
 
 markers = [
-{% for post in posts %}
+{% for post in all_posts %}
 L.marker([{{post.latitude}}, {{post.longitude}}], {
     icon: L.mapbox.marker.icon({
         'marker-size': 'large',
-        {% if post.image_path %}
+        {% if post.large or post.medium or post.small %}
         'marker-symbol': 'camera',
         {% else %}
         'marker-symbol': 'library',
@@ -71,13 +77,28 @@ L.marker([{{post.latitude}}, {{post.longitude}}], {
         'marker-color': '#2196F3'
     })
 })
-{% if post.image_path %}
-.bindPopup('<img src="{{url_for('user.prox', path=post.image_path)}}" height="120px"/>',{closeButton : false}),
+{% if post.small %}
+.bindPopup('<img src="{{url_for('user.prox', path=post.small)}}" height="120px"/>',{closeButton : false}),
+{% elif post.medium %}
+.bindPopup('<img src="{{url_for('user.prox', path=post.medium)}}" height="120px"/>',{closeButton : false}),
 {% elif post.text %}
 .bindPopup('<p class="truncate">{{post.title}}</p><a class="black-text" href="{{ url_for('user.post', id=post.id) }}">Read</a>',{closeButton : false}),
-{% endif %}
+{% else %},{% endif %}
+{% endfor %}
+
+];
+
+var line = [
+{% for post in all_posts[4:] %}
+  [ {{post.latitude}}, {{post.longitude}}],
 {% endfor %}
 ];
+
+var polyline_options = {
+    color: '#000'
+};
+var polyline = L.polyline(line, polyline_options).addTo(map);
+
 
 var group = L.featureGroup(markers).addTo(map);
 //map.fitBounds(group.getBounds());

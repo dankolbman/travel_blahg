@@ -19,16 +19,17 @@ from blog.models import User, Post, TextPost, ImagePost, Ping
 user = Blueprint('user', __name__)
 
 @user.route('/')
+@login_required
 def home():
   p = Post.query.filter_by(author_id=current_user.id).order_by(desc(Post.timestamp)).limit(10).all()
-  return render_template('index.html', posts=p, user=current_user)
+  return render_template('index.html', posts=p, user=current_user, all_posts=Post.query.filter_by(author_id=current_user.id).all())
 
 @user.route('/<path:username>')
 def user_page(username):
   user =  User.query.filter_by(username=username).first()
   if user != None:
     p = Post.query.filter_by(author_id=user.id).order_by(desc(Post.timestamp)).limit(10).all()
-    return render_template('index.html', posts=p, user=user)
+    return render_template('index.html', posts=p, user=current_user, all_posts=Post.query.filter_by(author_id=current_user.id).all())
   else:
     return 'Couldn\'t find user {0}'.format(username)
 
