@@ -3,6 +3,10 @@ class Config(object):
   SECRET_KEY = 'G00DB33F'
   ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif'])
 
+  LARGE_IMAGE = '968'
+  MED_IMAGE = '512'
+  SMALL_IMAGE = '128'
+
 
 class ProdConfig(Config):
   DEBUG = False

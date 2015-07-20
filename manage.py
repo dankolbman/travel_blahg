@@ -1,6 +1,7 @@
 import os
 
 from flask.ext.script import Manager, Server
+from flask.ext.migrate import Migrate, MigrateCommand
 from flask.ext.script.commands import ShowUrls, Clean
 
 from blog import create_app
@@ -12,11 +13,13 @@ env = os.environ.get('BLOG_ENV', 'dev')
 app = create_app('blog.configs.{0}Config'.format( env.capitalize()), env=env)
 print('Using config {0}'.format(env))
 
+migrate = Migrate(app, db)
+
 manager = Manager(app)
 manager.add_command("server", Server())
 manager.add_command("show-urls", ShowUrls())
 manager.add_command("clean", Clean())
-
+manager.add_command('db', MigrateCommand)
 
 @manager.command
 def createuser(name, password, email):

@@ -9,6 +9,8 @@ from werkzeug import secure_filename
 from sqlalchemy import desc, func
 from geoalchemy2 import Geometry
 
+from PIL import Image
+
 from blog.extensions import cache
 from blog.models import db
 from blog.forms import CreatePostForm, CreateImageForm, EditProfileForm
@@ -100,21 +102,42 @@ def new_image():
   form = CreateImageForm()
 
   if request.method == 'POST':
+
     f = request.files['image']
+
     if f and allowed_file(f.filename):
+      # Generate a filename
       filename = secure_filename(f.filename)
       filename = os.path.splitext(filename)[1]
       rname = ''.join(random.choice(string.ascii_lowercase + string.digits) for _ in range(16))
-      filename = rname+filename
-      fpath = os.path.join('blog',current_app.config['UPLOAD_FOLDER'], filename)
-      f.save(fpath)
+      filename = current_user.username + '_' + rname + filename
+
+      lfname = current_app.config['LARGE_IMAGE'] + '_' + filename
+      mfname = current_app.config['MED_IMAGE'] + '_' + filename
+      sfname = current_app.config['SMALL_IMAGE'] + '_' + filename
+
+      # Resize the image
+      im = Image.open(f)
+      im.thumbnail( (968, 968) )
+      large = os.path.join( 'blog', current_app.config['UPLOAD_FOLDER'],  lfname )
+      im.save( large )
+
+      im.thumbnail( (512, 512) )
+      med = os.path.join( 'blog', current_app.config['UPLOAD_FOLDER'], mfname )
+      im.save( med )
+
+      im.thumbnail( (128, 128) )
+      small = os.path.join( 'blog', current_app.config['UPLOAD_FOLDER'], sfname )
+      im.save( small )
 
       t = datetime.utcnow()
       imagepost = ImagePost(author=current_user._get_current_object(),
                     title=form.title.data,
                     timestamp=t,
                     caption=form.caption.data,
-                    image_path=filename,
+                    large=lfname,
+                    medium=mfname,
+                    small=sfname,
                     latitude=form.latitude.data,
                     longitude=form.longitude.data,
                     loc='POINT({0} {1})'.format(form.longitude.data,form.latitude.data))
@@ -174,7 +197,20 @@ def delete_post(id):
     return 'This isn\'t your post!!!'
   else:
     flash('"{0}" was deleted'.format(p.title))
-    Post.query.filter_by(id=id).delete()
+    p = Post.query.filter_by(id=id)
+    post = p.first()
+    # Remove images
+    if p.first().large and os.path.isfile( os.path.join( 'blog', current_app.config['UPLOAD_FOLDER'],  post.large ) ):
+      os.remove( os.path.join( 'blog', current_app.config['UPLOAD_FOLDER'],  post.large ) )
+
+    if p.first().medium and os.path.isfile( os.path.join( 'blog', current_app.config['UPLOAD_FOLDER'],  post.medium ) ):
+      os.remove( os.path.join( 'blog', current_app.config['UPLOAD_FOLDER'],  post.medium ) )
+
+    if p.first().small and os.path.isfile( os.path.join( 'blog', current_app.config['UPLOAD_FOLDER'],  post.small ) ):
+      os.remove( os.path.join( 'blog', current_app.config['UPLOAD_FOLDER'],  post.small ) )
+
+      
+    p.delete()
     db.session.commit()
     return redirect(url_for('main.index'))
   

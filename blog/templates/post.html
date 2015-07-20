@@ -9,9 +9,9 @@
 
   <div class="card">
     <div class="card-content white-text">
-    {% if post.image_path %}
+    {% if post.large %}
     <div class="card-image">
-      <img src="{{url_for('user.prox', path=post.image_path)}}">
+      <img src="{{url_for('user.prox', path=post.large )}}">
     </div>
     {% endif %}
     <div class="container">

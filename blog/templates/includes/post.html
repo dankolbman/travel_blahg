@@ -1,8 +1,12 @@
 <div class="col s12 m12 l6">
   <div class="card">
-    {% if post.image_path %}
+    {% if post.medium or post.large %}
     <div class="card-image waves-effect waves-block waves-light">
-      <img class="activator" src="{{url_for('user.prox', path=post.image_path)}}">
+      {% if post.medium %}
+      <img class="activator" src="{{url_for('user.prox', path=post.medium)}}">
+      {% elif post.large %}
+      <img class="activator" src="{{url_for('user.prox', path=post.large)}}">
+      {% endif %}
     </div>
     {% else %}
     <div class="card-image">
@@ -43,7 +47,7 @@
   </div>
 </div>
 
-{% if not post.image_path %}
+{% if not post.medium or not post.large %}
 <script>
   L.mapbox.accessToken = 'pk.eyJ1IjoiZGFuazUyOCIsImEiOiJzOVp0TzJnIn0.1c8obLmcPHN4LosoNan8DQ';
 

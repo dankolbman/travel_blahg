@@ -86,7 +86,9 @@ class TextPost(Post):
 class ImagePost(Post):
   """ An image post """
   __mapper_args__ = {'polymorphic_identity': 'image'}
-  image_path = db.Column(db.Text)
+  large = db.Column(db.Text)
+  medium = db.Column(db.Text)
+  small = db.Column(db.Text)
   caption = db.Column(db.String(512))
 
 class Ping(db.Model):
