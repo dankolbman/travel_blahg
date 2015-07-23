@@ -7,7 +7,7 @@
       <i class="large mdi-social-public left"></i>
       {% if user %}
       {{ user.username.capitalize() }}'s Travel Blog
-      {% elif current_user %}
+      {% elif current_user.username %}
       {{ current_user.username.capitalize() }}'s Travel Blog
       {% else %}
       {{config['APP_NAME']}}
