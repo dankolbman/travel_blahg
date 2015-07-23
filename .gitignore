@@ -2,6 +2,7 @@
 *.db
 *.map
 *.swp
+*.sql
 
 /venv
 dev_uploads/
