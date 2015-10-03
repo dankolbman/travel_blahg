@@ -6,7 +6,7 @@ from flask import Blueprint, render_template, flash, request, redirect, url_for,
 from flask.ext.login import login_required, current_user
 from werkzeug import secure_filename 
 
-from sqlalchemy import desc, func
+from sqlalchemy import desc, func, select
 from geoalchemy2 import Geometry
 
 from blog.extensions import cache
@@ -39,7 +39,7 @@ def prox(path):
 def ping_map():
   """ Show a map with users pings """
   import json
-  pings = Ping.query.filter_by(author_id=current_user.id).order_by(desc(Ping.timestamp)).limit(500).all()
+  pings = Ping.query.filter_by(author_id=current_user.id).order_by(desc(Ping.timestamp)).limit(10000).all()
 
   geo_json = []
   for ping in pings:
@@ -56,14 +56,16 @@ def ping_map_user(username):
   """ Show a map with users pings """
   import json
   user = User.query.filter_by(username=username).first_or_404();
-  pings = Ping.query.filter_by(author=user).order_by(desc(Ping.timestamp)).limit(500).all()
+  pings = Ping.query.filter_by(author=user).order_by(desc(Ping.timestamp))
+  pings = pings.filter(Ping.timestamp > '2015-06-03').limit(10000).all()
 
-  geo_json = []
+
+  geo_json = { "type": "LineString", "coordinates": [] }
   for ping in pings:
-    geom = json.loads(db.session.scalar(ping.loc.ST_AsGeoJSON()))
-    geo_json.append({"type":"Feature",'geometry':geom})
+    ping = json.loads(db.session.scalar(ping.loc.ST_AsGeoJSON()))
+    geo_json["coordinates"].append(ping["coordinates"])
 
-  last_up = pings[-1].timestamp
+  last_up = Ping.query.filter_by(author=user).order_by(desc(Ping.timestamp)).first().timestamp
   geo_json = json.dumps(geo_json)
 
   return render_template('user/ping_map.html', geo_json=geo_json,last=last_up,username=username)
