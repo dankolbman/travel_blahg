@@ -1,3 +1,6 @@
+import os
+
+
 class Config(object):
   APP_NAME = 'Blog'
   SECRET_KEY = 'G00DB33F'
@@ -7,11 +10,18 @@ class Config(object):
   MED_IMAGE = '512'
   SMALL_IMAGE = '128'
 
+  PG_HOST = os.environ.get('PG_HOST', 'localhost')
+  PG_PORT = os.environ.get('PG_PORT', 5432)
+  PG_NAME = os.environ.get('PG_NAME', 'dev')
+  PG_USER = os.environ.get('PG_USER', 'postgres')
+  PG_PASS = os.environ.get('PG_PASS', 'pass')
+  SQLALCHEMY_DATABASE_URI = 'postgres://{}:{}@{}:{}/{}'.format(
+                                PG_USER, PG_PASS, PG_HOST, PG_PORT, PG_NAME)
 
 class ProdConfig(Config):
   DEBUG = False
   TESTING = False
-  SQLALCHEMY_DATABASE_URI = "postgresql:///blog"
+
 
   UPLOAD_FOLDER = 'uploads'
   CACHE_TYPE = 'simple'

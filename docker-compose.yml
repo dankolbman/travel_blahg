@@ -1,0 +1,22 @@
+version: '3'
+
+services:
+  pg:
+    image: kartoza/postgis
+    environment:
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASS: "pass"
+      POSTGRES_DBNAME: "blog"
+  blahg:
+    image: blahg:latest
+    command: /bin/bash -c "sleep 7; bin/run.sh"
+    volumes:
+      - .:/app
+    ports:
+      - "5000:80"
+    environment:
+      - FLASK_CONFIG=development
+      - PG_NAME=blog
+      - PG_HOST=pg
+    depends_on:
+      - pg
